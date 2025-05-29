@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     private void InitializeGame()
     {
         bubbleGrid.InitializeGrid(); // 격자 시스템 초기화
-        bubbleShooter.SelectNextBubble(); // 첫 번째 버블 설정
+        //bubbleShooter.SelectNextBubble(); // 첫 번째 버블 설정
     }
 
     // 점수를 업데이트하는 함수

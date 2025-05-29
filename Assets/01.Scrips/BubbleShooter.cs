@@ -1,18 +1,19 @@
 using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class BubbleShooter : MonoBehaviour
 {
-    public List<GameObject> bubblePool; // 미리 생성된 버블 오브젝트 리스트
+    public GameObject bubblePrefab; // 생성할 버블 프리팹
     public Transform firePoint; // 발사 위치
-    public float bubbleSpeed = 10f;
+    public float bubbleSpeed = 10f; // 버블 속도
+    public Image nextBubbleImage; // UI에서 다음 버블을 표시할 이미지
+    public Sprite[] bubbleSprites; // 사용 가능한 버블 이미지 배열
 
-    private GameObject nextBubble; // 다음에 발사될 버블 오브젝트
+    private int nextBubbleIndex; // 다음에 발사될 버블의 인덱스
 
     private void Start()
     {
-        GenerateBubblePool();
-        SelectNextBubble();
+        GenerateNextBubble(); // 게임 시작 시 다음 버블 설정
     }
 
     private void Update()
@@ -20,48 +21,40 @@ public class BubbleShooter : MonoBehaviour
         RotateTowardsMouse();
         if (Input.GetMouseButtonDown(0))
         {
-            ShootBubble();
+            ShootBubble(); // 클릭할 때 즉시 생성 후 발사
         }
     }
 
-    //마우스 방향으로 발사대 회전
+    // 발사대를 마우스 방향으로 회전하지만, 일정 각도만 허용
     private void RotateTowardsMouse()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - transform.position).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f);
+
+        angle = Mathf.Clamp(angle - 90f, -30f, 30f); // 회전 각도 제한
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
 
-    //미리 생성된 버블들을 리스트에 저장
-    private void GenerateBubblePool()
-    {
-        bubblePool = new List<GameObject>();
-        for (int i = 0; i < 10; i++) // 10개의 버블 미리 생성
-        {
-            GameObject bubble = Instantiate(Resources.Load<GameObject>("BubblePrefab")); // 버블 프리팹 로드
-            bubble.SetActive(false); // 비활성화하여 보이지 않도록 설정
-            bubblePool.Add(bubble);
-        }
-    }
-
-    //다음에 발사될 버블을 선택
-    public void SelectNextBubble()
-    {
-        nextBubble = bubblePool[Random.Range(0, bubblePool.Count)];
-    }
-
-    //버블 발사 기능
+    // 클릭할 때 새로운 버블을 즉시 생성하여 발사
     private void ShootBubble()
     {
-        nextBubble.transform.position = firePoint.position;
-        nextBubble.SetActive(true); // 활성화하여 보이도록 설정
-        Bubble bubbleScript = nextBubble.GetComponent<Bubble>();
+        GameObject bubbleObj = Instantiate(bubblePrefab, firePoint.position, Quaternion.identity); //버블 즉시 생성
+        Bubble bubbleScript = bubbleObj.GetComponent<Bubble>();
 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 shootDirection = (mousePos - firePoint.position).normalized;
 
-        bubbleScript.SetDirection(shootDirection); // 방향 설정
-        SelectNextBubble(); // 다음 버블 준비
+        bubbleScript.SetDirection(shootDirection);
+        bubbleScript.SetBubble(nextBubbleIndex); // 발사될 버블 이미지 설정
+
+        GenerateNextBubble(); // 다음 버블 설정
+    }
+
+    // 다음 버블을 미리 설정하고 UI에서 표시
+    private void GenerateNextBubble()
+    {
+        nextBubbleIndex = Random.Range(1, 5); // 1~4번 버블 중 랜덤 선택
+        nextBubbleImage.sprite = bubbleSprites[nextBubbleIndex]; // UI에서 이미지 업데이트
     }
 }
