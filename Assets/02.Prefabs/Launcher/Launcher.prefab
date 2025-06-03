@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8357315967897085718}
   - component: {fileID: 3636289147821695285}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3680836216436032852}
   - component: {fileID: 5285829424316414147}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Launcher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,17 +130,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3e6c1e0216e9284f94a563812aa4b96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bubblePool:
-  - {fileID: 8318543155080142976, guid: 1d590f29e0a597c4696583de14f17815, type: 3}
-  - {fileID: 4898924982796020302, guid: daf5bbc53a096f74b9a234d5e068eb55, type: 3}
-  - {fileID: 5119175971409802760, guid: 5afff7d67a734ea42911e06c0a774982, type: 3}
-  - {fileID: 8481062654619576437, guid: f1250c14cf4420e4d9ef50630378f10c, type: 3}
-  - {fileID: 2043895433936152352, guid: 9023ee03182ba5945a30dddf20ff7b72, type: 3}
-  - {fileID: 3476882024829639903, guid: 773743c1916f29345a299ff1b3534634, type: 3}
-  - {fileID: 5673609242182296122, guid: cf32f8aa55c0c9d419ae7dce51bd12dd, type: 3}
-  - {fileID: 7662959656610435480, guid: 42a25a4e1aa262f489d741f7ae8f217a, type: 3}
+  minRotation: -45
+  maxRotation: 45
+  bubblePrefab: {fileID: 0}
   firePoint: {fileID: 4770407224853588450}
   bubbleSpeed: 50
+  nextBubbleImage: {fileID: 0}
+  bubbleSprites: []
 --- !u!1 &7376915823099581974
 GameObject:
   m_ObjectHideFlags: 0
@@ -151,7 +147,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4770407224853588450}
   - component: {fileID: 4707064372135988097}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: 9-Sliced
   m_TagString: Untagged
   m_Icon: {fileID: 0}

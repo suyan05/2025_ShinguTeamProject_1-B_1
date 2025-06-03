@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
     public BubbleShooter bubbleShooter; // 버블 발사 시스템 참조
     private int score = 0; // 현재 게임 점수
 
-    void Start()
+    private void Start()
     {
         InitializeGame(); // 게임 시작 시 격자 초기화
     }
@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     // 격자를 초기화하는 함수
     private void InitializeGame()
     {
-        bubbleGrid.InitializeGrid();
+        bubbleGrid.InitializeGrid(); // 격자 시스템 초기화
     }
 
     // 점수를 추가하는 함수
