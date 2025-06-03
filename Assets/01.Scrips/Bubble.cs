@@ -103,12 +103,12 @@ public class Bubble : MonoBehaviour
                 isPlaced = true;
                 direction = Vector2.zero;
                 GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-                Debug.Log("격자 오류");
+
                 //가장 가까운 빈 격자를 찾고 배치
                 Vector2 nearestGridPosition = bubbleGrid.FindNearestEmptyGrid(transform.position);
                 transform.position = nearestGridPosition;
                 bubbleGrid.PlaceBubble(this, nearestGridPosition);
-                Debug.Log("격자 오류 아님");
+
             }
         }
     }
