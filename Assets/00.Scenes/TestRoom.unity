@@ -156,8 +156,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -250, y: 0}
-  m_SizeDelta: {x: 500, y: 0}
+  m_AnchoredPosition: {x: -225, y: 0}
+  m_SizeDelta: {x: 450, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &128589031
 MonoBehaviour:
@@ -318,7 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8171b802579152c419c8d3d27b7b46d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 10
+  rows: 8
   cols: 8
   bubbleSize: 1
   bubblePrefab: {fileID: 8481062654619576437, guid: 245c5285fb9b01540b1e3068bc1d5870, type: 3}
@@ -1170,7 +1170,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3680836216436032852, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 3680836216436032852, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
       propertyPath: m_LocalRotation.w

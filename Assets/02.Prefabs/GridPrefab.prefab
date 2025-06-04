@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4320264969521052773}
   - component: {fileID: 8701227415405337238}
   m_Layer: 0
-  m_Name: BubblePrefab
+  m_Name: GridPrefab
   m_TagString: Bubble
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
