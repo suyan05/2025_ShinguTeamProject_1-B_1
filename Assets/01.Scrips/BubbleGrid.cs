@@ -6,11 +6,13 @@ public class BubbleGrid : MonoBehaviour
     public int cols = 6; // 격자의 열 개수
     public float bubbleSize = 1f; // 각 버블 크기
     public GameObject bubblePrefab; // 버블 프리팹
-    private Bubble[,] grid; // 버블을 저장하는 격자 공간
+    public Bubble bubble;
+    public Bubble[,] grid; // 버블을 저장하는 격자 공간
 
     private void Start()
     {
         grid = new Bubble[rows, cols];
+        bubble = GetComponent<Bubble>(); // Bubble 컴포넌트 가져오기
         InitializeGrid(); // 격자 초기화
     }
 
@@ -31,9 +33,8 @@ public class BubbleGrid : MonoBehaviour
                 GameObject bubbleObj = Instantiate(bubblePrefab, position, Quaternion.identity);
                 bubbleObj.transform.parent = transform;
 
-                Bubble bubble = bubbleObj.GetComponent<Bubble>();
                 grid[y, x] = bubble;
-                //bubble.SetGridPosition(x, y); // 격자 좌표 저장
+                bubble.SetGridPosition(x, y); // 격자 좌표 저장
             }
         }
     }

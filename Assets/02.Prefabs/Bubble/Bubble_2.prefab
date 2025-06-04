@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5413623630589671163}
   - component: {fileID: 5259060112520509828}
   - component: {fileID: 4622864746732065519}
-  - component: {fileID: 3336048149690079818}
   - component: {fileID: 2975535011231121855}
   m_Layer: 0
   m_Name: Bubble_2
@@ -19,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5413623630589671163
 Transform:
   m_ObjectHideFlags: 0
@@ -122,28 +121,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &3336048149690079818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4898924982796020302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0944488de6083e428096a7d4d476143, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
-  bubbleObjects:
-  - {fileID: 8318543155080142976, guid: 1d590f29e0a597c4696583de14f17815, type: 3}
-  - {fileID: 4898924982796020302}
-  - {fileID: 5119175971409802760, guid: 5afff7d67a734ea42911e06c0a774982, type: 3}
-  - {fileID: 8481062654619576437, guid: f1250c14cf4420e4d9ef50630378f10c, type: 3}
-  - {fileID: 2043895433936152352, guid: 9023ee03182ba5945a30dddf20ff7b72, type: 3}
-  - {fileID: 3476882024829639903, guid: 773743c1916f29345a299ff1b3534634, type: 3}
-  - {fileID: 5673609242182296122, guid: cf32f8aa55c0c9d419ae7dce51bd12dd, type: 3}
-  - {fileID: 7662959656610435480, guid: 42a25a4e1aa262f489d741f7ae8f217a, type: 3}
 --- !u!50 &2975535011231121855
 Rigidbody2D:
   serializedVersion: 4
