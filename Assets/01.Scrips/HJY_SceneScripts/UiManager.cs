@@ -4,11 +4,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-public class StartGame : MonoBehaviour
+public class UiManager : MonoBehaviour
 {
-    public void LoadScene()
+    public void LoadInGameScene()
     {
         SceneManager.LoadScene("Test_InGame");  
     }
 
+    public void LoadMainScene()
+    {
+        SceneManager.LoadScene("Test_Main");
+    }
 }
