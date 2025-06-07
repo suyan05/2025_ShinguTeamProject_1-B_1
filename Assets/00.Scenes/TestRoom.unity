@@ -321,8 +321,6 @@ MonoBehaviour:
   rows: 10
   cols: 8
   bubbleSize: 1
-  bubblePrefab: {fileID: 8481062654619576437, guid: 245c5285fb9b01540b1e3068bc1d5870, type: 3}
-  bubble: {fileID: 1572024437}
 --- !u!4 &735249061
 Transform:
   m_ObjectHideFlags: 0
@@ -502,60 +500,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1572024436
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1572024438}
-  - component: {fileID: 1572024437}
-  m_Layer: 0
-  m_Name: Bubble
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1572024437
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1572024436}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0944488de6083e428096a7d4d476143, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
-  bubbleObjects:
-  - {fileID: 8318543155080142976, guid: 1d590f29e0a597c4696583de14f17815, type: 3}
-  - {fileID: 4898924982796020302, guid: daf5bbc53a096f74b9a234d5e068eb55, type: 3}
-  - {fileID: 5119175971409802760, guid: 5afff7d67a734ea42911e06c0a774982, type: 3}
-  - {fileID: 8481062654619576437, guid: f1250c14cf4420e4d9ef50630378f10c, type: 3}
-  - {fileID: 2043895433936152352, guid: 9023ee03182ba5945a30dddf20ff7b72, type: 3}
-  - {fileID: 3476882024829639903, guid: 773743c1916f29345a299ff1b3534634, type: 3}
-  - {fileID: 5673609242182296122, guid: cf32f8aa55c0c9d419ae7dce51bd12dd, type: 3}
-  - {fileID: 7662959656610435480, guid: 42a25a4e1aa262f489d741f7ae8f217a, type: 3}
---- !u!4 &1572024438
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1572024436}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1670, y: 540, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1647889860
 GameObject:
   m_ObjectHideFlags: 0
@@ -757,8 +701,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a15a96a42ce547e4294a1fb7429e9578, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bubbleGrid: {fileID: 735249060}
-  bubbleShooter: {fileID: 2123178659}
 --- !u!4 &1841761147
 Transform:
   m_ObjectHideFlags: 0
@@ -1184,17 +1126,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2115039843}
   m_CullTransparentMesh: 1
---- !u!114 &2123178659 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
-  m_PrefabInstance: {fileID: 2708454750288018459}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3e6c1e0216e9284f94a563812aa4b96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &2708454750288018459
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1256,6 +1187,10 @@ PrefabInstance:
       value: -180
       objectReference: {fileID: 0}
     - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
+      propertyPath: bubbleSpeed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
       propertyPath: maxRotation
       value: -110
       objectReference: {fileID: 0}
@@ -1266,15 +1201,51 @@ PrefabInstance:
     - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
       propertyPath: bubblePrefab
       value: 
-      objectReference: {fileID: 1572024436}
+      objectReference: {fileID: 0}
     - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
       propertyPath: nextBubbleImage
       value: 
       objectReference: {fileID: 2037820099}
     - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
+      propertyPath: bubblePrefabs.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
       propertyPath: bubbleSprites.Array.size
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
+      propertyPath: bubblePrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 8318543155080142976, guid: 1d590f29e0a597c4696583de14f17815, type: 3}
+    - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
+      propertyPath: bubblePrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 4898924982796020302, guid: daf5bbc53a096f74b9a234d5e068eb55, type: 3}
+    - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
+      propertyPath: bubblePrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 5119175971409802760, guid: 5afff7d67a734ea42911e06c0a774982, type: 3}
+    - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
+      propertyPath: bubblePrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 8481062654619576437, guid: f1250c14cf4420e4d9ef50630378f10c, type: 3}
+    - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
+      propertyPath: bubblePrefabs.Array.data[4]
+      value: 
+      objectReference: {fileID: 2043895433936152352, guid: 9023ee03182ba5945a30dddf20ff7b72, type: 3}
+    - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
+      propertyPath: bubblePrefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 3476882024829639903, guid: 773743c1916f29345a299ff1b3534634, type: 3}
+    - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
+      propertyPath: bubblePrefabs.Array.data[6]
+      value: 
+      objectReference: {fileID: 5673609242182296122, guid: cf32f8aa55c0c9d419ae7dce51bd12dd, type: 3}
+    - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
+      propertyPath: bubblePrefabs.Array.data[7]
+      value: 
+      objectReference: {fileID: 7662959656610435480, guid: 42a25a4e1aa262f489d741f7ae8f217a, type: 3}
     - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
       propertyPath: bubbleSprites.Array.data[0]
       value: 
@@ -1335,4 +1306,3 @@ SceneRoots:
   - {fileID: 1719449914}
   - {fileID: 1647889863}
   - {fileID: 858952361}
-  - {fileID: 1572024438}
