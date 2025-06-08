@@ -4,7 +4,7 @@ public class GameManager : MonoBehaviour
 {
     private int score = 0; //게임 점수
 
-    void Start()
+    private void Start()
     {
         UpdateScoreUI();
     }

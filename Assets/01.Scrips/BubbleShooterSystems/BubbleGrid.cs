@@ -9,7 +9,7 @@ public class BubbleGrid : MonoBehaviour
 
     void Start()
     {
-        grid = new Bubble[rows, cols]; //격자 배열 초기화
+        grid = new Bubble[rows, cols]; // 격자 배열 초기화
     }
 
     //가장 가까운 빈 격자 위치를 찾는 함수
@@ -22,7 +22,7 @@ public class BubbleGrid : MonoBehaviour
         {
             for (int x = 0; x < cols; x++)
             {
-                if (grid[y, x] == null) //빈 공간인지 확인
+                if (grid[y, x] == null) // **빈 공간인지 확인**
                 {
                     Vector2 gridPos = GetGridPosition(x, y);
                     float distance = Vector2.Distance(position, gridPos);
@@ -35,18 +35,27 @@ public class BubbleGrid : MonoBehaviour
                 }
             }
         }
+
         return nearestGridPos;
     }
 
-    private Vector2 GetGridPosition(int x, int y)
+    //격자 좌표를 월드 좌표로 변환
+    public Vector2 GetGridPosition(int x, int y)
     {
-        return new Vector2(x * bubbleSize, y * bubbleSize);
+        float gridWidth = cols * bubbleSize;
+        float gridHeight = rows * bubbleSize;
+        Vector2 centerOffset = new Vector2(-gridWidth / 2f + bubbleSize / 2f, gridHeight / 2f - bubbleSize / 2f);
+
+        // 홀수 행의 경우 x 위치를 절반씩 이동
+        float xOffset = (y % 2 == 0) ? 0f : bubbleSize / 2f;
+
+        return new Vector2(centerOffset.x + x * bubbleSize + xOffset, centerOffset.y - y * bubbleSize);
     }
 
-    public void PlaceBubble(Bubble bubble, Vector2 position)
+    //버블을 지정된 위치에 배치
+    public void PlaceBubble(Bubble bubble)
     {
-        int x = Mathf.RoundToInt(position.x / bubbleSize);
-        int y = Mathf.RoundToInt(position.y / bubbleSize);
-        grid[y, x] = bubble; //버블을 격자에 배치
+        Vector2 nearestGridPos = FindNearestEmptyGrid(bubble.transform.position);
+        bubble.transform.position = nearestGridPos; //격자 위치에 배치
     }
 }

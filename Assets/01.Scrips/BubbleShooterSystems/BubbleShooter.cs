@@ -2,10 +2,14 @@ using UnityEngine;
 
 public class BubbleShooter : MonoBehaviour
 {
-    public GameObject[] bubblePrefabs; //버블 프리팹 배열
-    public Transform firePoint;        //버블 발사 위치
-    public float bubbleSpeed = 10f;    //버블 발사 속도
-    private int nextBubbleIndex;       //다음 발사될 버블 인덱스
+    public GameObject[] bubblePrefabs;  //버블 프리팹 배열
+    public Transform firePoint;         //버블 발사 위치
+    public float bubbleSpeed = 10f;     //버블 발사 속도
+    private int nextBubbleIndex;        //다음 발사될 버블 인덱스
+    private bool canShoot = true;       //발사 가능 여부
+
+    public float minAngle = -45f;       //최소 회전 각도 (외부 수정 가능)
+    public float maxAngle = 45f;        //최대 회전 각도 (외부 수정 가능)
 
     void Start()
     {
@@ -14,10 +18,10 @@ public class BubbleShooter : MonoBehaviour
 
     void Update()
     {
-        RotateTowardsMouse(); //마우스를 따라 발사대 회전
-        if (Input.GetMouseButtonDown(0))
+        RotateTowardsMouse();
+        if (Input.GetMouseButtonDown(0) && canShoot)
         {
-            ShootBubble(); //버블 발사
+            ShootBubble(); //발사 가능할 때만 버블 발사
         }
     }
 
@@ -27,22 +31,32 @@ public class BubbleShooter : MonoBehaviour
         Vector2 direction = (mousePos - transform.position).normalized;
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0f, 0f, angle); //발사대 회전 적용
+
+        //회전 각도 제한 적용
+        angle = Mathf.Clamp(angle, minAngle, maxAngle);
+        transform.rotation = Quaternion.Euler(0f, 0f, angle - 90);
     }
 
     private void ShootBubble()
     {
-        //프리팹을 인스턴스화하여 버블 생성
+        canShoot = false; //발사 후 일시적으로 추가 발사 금지
+
         GameObject bubbleObj = Instantiate(bubblePrefabs[nextBubbleIndex], firePoint.position, Quaternion.identity);
         Bubble bubbleScript = bubbleObj.GetComponent<Bubble>();
 
-        //발사대의 회전 각도에 따라 발사 방향 설정
         float shootAngle = transform.rotation.eulerAngles.z;
         Vector2 shootDirection = new Vector2(-Mathf.Sin(Mathf.Deg2Rad * shootAngle), Mathf.Cos(Mathf.Deg2Rad * shootAngle));
 
-        bubbleScript.SetDirection(shootDirection.normalized); //발사 방향 설정
-        bubbleScript.SetSpeed(bubbleSpeed); //속도 적용
+        bubbleScript.SetDirection(shootDirection.normalized);
+        bubbleScript.SetSpeed(bubbleSpeed);
+        bubbleScript.SetShooter(this); //버블에 슈터 참조 전달
+
         GenerateNextBubble(); //다음 버블 설정
+    }
+
+    public void EnableShooting()
+    {
+        canShoot = true; //격자 배치 후 다시 발사 가능
     }
 
     private void GenerateNextBubble()

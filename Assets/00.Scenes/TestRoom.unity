@@ -1187,6 +1187,14 @@ PrefabInstance:
       value: -180
       objectReference: {fileID: 0}
     - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
+      propertyPath: maxAngle
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
+      propertyPath: minAngle
+      value: -150
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
       propertyPath: bubbleSpeed
       value: 6
       objectReference: {fileID: 0}
@@ -1206,6 +1214,14 @@ PrefabInstance:
       propertyPath: nextBubbleImage
       value: 
       objectReference: {fileID: 2037820099}
+    - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
+      propertyPath: maxRotationAngle
+      value: -110
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
+      propertyPath: minRotationAngle
+      value: -250
+      objectReference: {fileID: 0}
     - target: {fileID: 5285829424316414147, guid: 55e38aea3e6b95a40a9af1a26796b829, type: 3}
       propertyPath: bubblePrefabs.Array.size
       value: 8
