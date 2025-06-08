@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GameEndGravityManager : MonoBehaviour
 {
+    public CanvasGroup gameOverPanelGroup; // Panel_GameOver에 있는 CanvasGroup을 연결하세요.
+    public float fadeDuration = 1.0f;       // 페이드 인에 걸리는 시간 (초)
+
     // UI 루트(Canvas)
     public Transform rootCanvas;
 
@@ -58,6 +61,9 @@ public class GameEndGravityManager : MonoBehaviour
         {
             breaker.BreakWithSortedDelay(baseY);
         }
+
+        // 패널 페이드 인 시작
+        StartCoroutine(FadeInGameOverPanel());
     }
 
     private float GetTopMostY(UIGravityBreak[] breakers)
@@ -80,5 +86,24 @@ public class GameEndGravityManager : MonoBehaviour
             }
         }
         return maxY;
+    }
+
+    private IEnumerator FadeInGameOverPanel()
+    {
+        if (gameOverPanelGroup == null) yield break;
+
+        gameOverPanelGroup.alpha = 0f;
+        gameOverPanelGroup.gameObject.SetActive(true); // 패널이 비활성화되어 있다면 활성화
+
+        float elapsed = 0f;
+
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            gameOverPanelGroup.alpha = Mathf.Clamp01(elapsed / fadeDuration);
+            yield return null;
+        }
+
+        gameOverPanelGroup.alpha = 1f; // 완전히 보이게 설정
     }
 }
