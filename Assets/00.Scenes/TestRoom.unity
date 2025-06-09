@@ -321,6 +321,8 @@ MonoBehaviour:
   rows: 10
   cols: 8
   bubbleSize: 1
+  maxHeight: 6
+  isGameOver: 0
 --- !u!4 &735249061
 Transform:
   m_ObjectHideFlags: 0

@@ -8,8 +8,8 @@ public class BubbleShooter : MonoBehaviour
     private int nextBubbleIndex;        //다음 발사될 버블 인덱스
     private bool canShoot = true;       //발사 가능 여부
 
-    public float minAngle = -45f;       //최소 회전 각도 (외부 수정 가능)
-    public float maxAngle = 45f;        //최대 회전 각도 (외부 수정 가능)
+    public float minAngle = -150;       //최소 회전 각도
+    public float maxAngle = -20;        //최대 회전 각도
 
     void Start()
     {
