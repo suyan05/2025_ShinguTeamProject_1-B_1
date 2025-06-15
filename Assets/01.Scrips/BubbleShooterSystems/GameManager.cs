@@ -1,26 +1,57 @@
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    private int score = 0; //게임 점수
+    public int score = 0; //게임 점수
+
+    //[한재용]점수 변수 선언
+    private int highScore;
+    public TextMeshProUGUI currentScoreText;
+    public TextMeshProUGUI highScoreText;
+    public TextMeshProUGUI lastScoreText;
+    public TextMeshProUGUI lastHghScoreText;
+
     private GameEndGravityManager gravityManager;
 
     private void Start()
     {
+        //[한재용]최고점수 불러오기
+        highScore = ScoreSaveSystem.SaveSystem.LoadHighScore();
+
         gravityManager = FindObjectOfType<GameEndGravityManager>(); // 참조 설정
         UpdateScoreUI();
+    }
+
+    //[한재용]점수 테스트용
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            AddScore(10);
+        }
     }
 
     public void AddScore(int points)
     {
         score += points; // 점수 추가
+
+        //[한재용]점수 저장
+        ScoreSaveSystem.SaveSystem.SaveScore(score);
+        highScore = ScoreSaveSystem.SaveSystem.LoadHighScore();
+
         UpdateScoreUI();
+
         Debug.Log("현재 점수: " + score);
     }
 
     private void UpdateScoreUI()
     {
-        //점수 UI 업데이트 로직
+        //[한재용]점수 UI 업데이트 로직
+        currentScoreText.text = ""+score;
+        highScoreText.text = ""+highScore;
+        lastScoreText.text = ""+score;
+        lastHghScoreText.text = ""+highScore;
     }
 
     public void BubbleMerged(int level)
@@ -37,6 +68,9 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         Debug.Log("Game Over!"); // 콘솔 출력
+
+        //[한재용]최종 점수 저장
+        ScoreSaveSystem.SaveSystem.SaveScore(score);
 
         UnityEditor.EditorApplication.isPlaying = false; // 에디터에서 게임 일시 정지
         /*if (gravityManager != null)

@@ -1,10 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class QuitMenu : MonoBehaviour
 {
     public GameObject pausePanel;
+    public TextMeshProUGUI highScoreText;
+
+    void Start()
+    {
+        int highScore = ScoreSaveSystem.SaveSystem.LoadHighScore();
+        highScoreText.text = ""+highScore;
+    }
 
     void Update()
     {

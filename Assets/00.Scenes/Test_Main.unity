@@ -334,6 +334,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pausePanel: {fileID: 912925638}
+  highScoreText: {fileID: 1373245780}
 --- !u!4 &370130039
 Transform:
   m_ObjectHideFlags: 0
