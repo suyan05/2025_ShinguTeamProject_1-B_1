@@ -11,8 +11,18 @@ public class Bubble : MonoBehaviour
     private Vector2 direction;       //버블 이동 방향
     private float speed = 5f;        //버블 이동 속도
     private bool isPlaced = false;   //격자에 배치 여부
-    
+
+    [HideInInspector] public int placedOrder;  // 배치 순서
     public int level;                //버블 등급
+
+    private SpriteRenderer sr;
+    private static readonly string spritePath = "Sprites/Bubble_";
+
+    private void Awake()
+    {
+        sr = GetComponent<SpriteRenderer>();
+
+    }
 
     void Start()
     {
@@ -77,4 +87,10 @@ public class Bubble : MonoBehaviour
             bubbleShooter.EnableShooting();
         }
     }
+
+    public void RefreshVisual()
+    {
+        sr.sprite = Resources.Load<Sprite>(spritePath + level);
+    }
+
 }

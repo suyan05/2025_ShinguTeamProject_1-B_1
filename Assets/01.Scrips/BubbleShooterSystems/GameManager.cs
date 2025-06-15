@@ -37,6 +37,8 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         Debug.Log("Game Over!"); // 콘솔 출력
+
+        UnityEditor.EditorApplication.isPlaying = false; // 에디터에서 게임 일시 정지
         /*if (gravityManager != null)
         {
             gravityManager.TriggerSortedBreak(); // 게임 오버 시 중력 정리 실행
