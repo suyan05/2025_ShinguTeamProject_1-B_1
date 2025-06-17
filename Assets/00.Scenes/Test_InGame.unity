@@ -2363,10 +2363,16 @@ MonoBehaviour:
   bubbleSpeed: 10
   minAngle: -150
   maxAngle: -20
-  nextBubbleVisual: {fileID: 0}
-  bubbleDataList: []
+  characterTransform: {fileID: 861390297}
+  currentBubbleVisual: {fileID: 1220018460}
+  nextBubbleVisual: {fileID: 1963244054}
+  bubbleDataList:
+  - {fileID: 11400000, guid: c73a1a1e1b731ce408d48638f6e3fb91, type: 2}
+  - {fileID: 11400000, guid: 0c4038e559b7cb84bb933ffc06db9178, type: 2}
+  - {fileID: 11400000, guid: c01f6244bc1506946b1553d34d5837c5, type: 2}
+  - {fileID: 11400000, guid: 49805db9f3bc7b247a0cf185342cd3ee, type: 2}
   currentUnlockLevel: 1
-  shoootedBubbleParent: {fileID: 0}
+  shoootedBubbleParent: {fileID: 953392226}
 --- !u!1 &704859118
 GameObject:
   m_ObjectHideFlags: 0
