@@ -1,23 +1,25 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
+using static ScoreSaveSystem;
 
 public class GameManager : MonoBehaviour
 {
-    public int score = 0; //게임 점수
+    public int Score { get; private set; }      //캡슐화
+    public int HighScore { get; private set; }
 
-    //[한재용]점수 변수 선언
-    private int highScore;
-    public TextMeshProUGUI currentScoreText;
-    public TextMeshProUGUI highScoreText;
-    public TextMeshProUGUI lastScoreText;
-    public TextMeshProUGUI lastHghScoreText;
+    [Header("UI")]
+    [SerializeField] TextMeshProUGUI currentScoreText;
+    [SerializeField] TextMeshProUGUI highScoreText;
+    [SerializeField] TextMeshProUGUI lastScoreText;
+    [SerializeField] TextMeshProUGUI lastHighScoreText;
 
     private GameEndGravityManager gravityManager;
 
     private void Start()
     {
         //[한재용]최고점수 불러오기
-        highScore = ScoreSaveSystem.SaveSystem.LoadHighScore();
+        HighScore = ScoreSaveSystem.SaveSystem.LoadHighScore();
 
         gravityManager = FindObjectOfType<GameEndGravityManager>(); // 참조 설정
         UpdateScoreUI();
@@ -32,27 +34,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AddScore(int points)
+    public void AddScore(int amount)
     {
-        score += points; // 점수 추가
-
-        //[한재용]점수 저장
-        ScoreSaveSystem.SaveSystem.SaveScore(score);
-        highScore = ScoreSaveSystem.SaveSystem.LoadHighScore();
-
+        Score += amount;
+        if (Score > HighScore)
+        {
+            HighScore = Score;
+            SaveSystem.SaveScore(HighScore);
+        }
         UpdateScoreUI();
-
-        Debug.Log("현재 점수: " + score);
     }
+
 
     private void UpdateScoreUI()
     {
-        //[한재용]점수 UI 업데이트 로직
-        currentScoreText.text = ""+score;
-        highScoreText.text = ""+highScore;
-        lastScoreText.text = ""+score;
-        lastHghScoreText.text = ""+highScore;
+        if (!currentScoreText) return;
+        currentScoreText.text = Score.ToString();
+        highScoreText.text = HighScore.ToString();
+        lastScoreText.text = Score.ToString();
+        lastHighScoreText.text = HighScore.ToString();
     }
+
 
     public void BubbleMerged(int level)
     {
@@ -70,7 +72,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Game Over!"); // 콘솔 출력
 
         //[한재용]최종 점수 저장
-        ScoreSaveSystem.SaveSystem.SaveScore(score);
+        SaveSystem.SaveScore(HighScore);
 
         UnityEditor.EditorApplication.isPlaying = false; // 에디터에서 게임 일시 정지
         /*if (gravityManager != null)
