@@ -6,6 +6,7 @@ public class BubbleGrid : MonoBehaviour
     public int rows = 10;
     public int cols = 6;
     public float bubbleSize = 1f;
+    public Color gridColor = Color.green; // 그리드 색상
     public float maxHeight = 7f; //게임 오버 높이 기준
     public bool isGameOver = false;
 
@@ -19,6 +20,21 @@ public class BubbleGrid : MonoBehaviour
         grid = new Bubble[rows, cols]; //격자 배열 초기화
         gameManager = FindObjectOfType<GameManager>(); //게임 매니저 참조
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = gridColor;
+
+        for (int y = 0; y < rows; y++)
+        {
+            for (int x = 0; x < cols; x++)
+            {
+                Vector2 position = GetGridPosition(x, y);
+                Gizmos.DrawWireSphere(position, bubbleSize * 0.4f); // 작은 원으로 표시
+            }
+        }
+    }
+
 
     // 버블이 바닥과 연결되어 있는지 확인
     private HashSet<Vector2Int> CheckConnectedBubbles()
@@ -69,28 +85,48 @@ public class BubbleGrid : MonoBehaviour
     }
 
 
-    // 연결이 끊긴 버블 아래로 이동
+    // 연결되지 않은 버블 아래로 이동 및 연결된 버블 탐색
+    // 연결되지 않은 버블 아래로 이동 (중력 적용)
     public void RepositionDisconnectedBubbles()
     {
         var connected = CheckConnectedBubbles();
 
-        for (int y = 0; y < rows; y++)
+        for (int y = rows - 1; y >= 0; y--) // 아래쪽부터 탐색
+        {
             for (int x = 0; x < cols; x++)
             {
                 if (grid[y, x] != null && !connected.Contains(new Vector2Int(x, y)))
                 {
-                    // 해당 칸 버블 제거
                     Bubble fallingBubble = grid[y, x];
                     grid[y, x] = null;
 
-                    // Rigidbody2D가 있다면 중력 활성화
-                    var rb = fallingBubble.GetComponent<Rigidbody2D>();
-                    if (rb != null) rb.isKinematic = false;
+                    Vector2Int targetCell = FindLowestAvailableCell(x, y);
 
-                    // Optional: 떨어지는 애니메이션이나 파티클
+                    // 빈 칸이 있다면 이동
+                    if (targetCell.y >= 0)
+                    {
+                        Vector2 targetPosition = GetGridPosition(targetCell.x, targetCell.y);
+                        fallingBubble.transform.position = targetPosition;
+                        grid[targetCell.y, targetCell.x] = fallingBubble;
+                    }
                 }
             }
+        }
     }
+
+    private Vector2Int FindLowestAvailableCell(int x, int y)
+    {
+        for (int ny = y + 1; ny < rows; ny++) // 아래 방향으로 탐색
+        {
+            if (grid[ny, x] == null) // 빈 칸 발견
+            {
+                return new Vector2Int(x, ny);
+            }
+        }
+
+        return new Vector2Int(x, y); // 빈 칸이 없으면 원래 위치 유지
+    }
+
 
     // 월드 좌표 → 그리드 인덱스
     private Vector2Int WorldToCell(Vector2 worldPos)
@@ -144,8 +180,7 @@ public class BubbleGrid : MonoBehaviour
         float gridH = rows * bubbleSize;
         Vector2 origin = new Vector2(-gridW / 2 + bubbleSize / 2, gridH / 2 - bubbleSize / 2);
         float xOff = (y % 2 == 0 ? 0f : bubbleSize / 2f);
-        return new Vector2(origin.x + x * bubbleSize + xOff,
-                           origin.y - y * bubbleSize);
+        return new Vector2(origin.x + x * bubbleSize + xOff, origin.y - y * bubbleSize);
     }
 
 

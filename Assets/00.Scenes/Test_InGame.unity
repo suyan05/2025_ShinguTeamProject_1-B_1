@@ -1269,11 +1269,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a15a96a42ce547e4294a1fb7429e9578, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  score: 0
   currentScoreText: {fileID: 966456363}
   highScoreText: {fileID: 412401899}
   lastScoreText: {fileID: 1129161378}
-  lastHghScoreText: {fileID: 564358083}
+  lastHighScoreText: {fileID: 564358083}
 --- !u!4 &312201983
 Transform:
   m_ObjectHideFlags: 0
