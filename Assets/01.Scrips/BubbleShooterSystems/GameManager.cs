@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] TextMeshProUGUI currentScoreText;
     [SerializeField] TextMeshProUGUI highScoreText;
-    [SerializeField] TextMeshProUGUI lastScoreText;
-    [SerializeField] TextMeshProUGUI lastHighScoreText;
+    //[SerializeField] TextMeshProUGUI lastScoreText;
+    //[SerializeField] TextMeshProUGUI lastHighScoreText;
 
     private GameEndGravityManager gravityManager;
 
@@ -51,8 +51,6 @@ public class GameManager : MonoBehaviour
         if (!currentScoreText) return;
         currentScoreText.text = Score.ToString();
         highScoreText.text = HighScore.ToString();
-        lastScoreText.text = Score.ToString();
-        lastHighScoreText.text = HighScore.ToString();
     }
 
 

@@ -1255,8 +1255,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentScoreText: {fileID: 966456363}
   highScoreText: {fileID: 412401899}
-  lastScoreText: {fileID: 1129161378}
-  lastHighScoreText: {fileID: 564358083}
 --- !u!4 &312201983
 Transform:
   m_ObjectHideFlags: 0
@@ -2136,6 +2134,9 @@ MonoBehaviour:
   rootCanvas: {fileID: 56426050}
   firedObjectsParent: {fileID: 953392226}
   characterRoot: {fileID: 1425019683}
+  gameManager: {fileID: 0}
+  resultScoreText: {fileID: 1129161378}
+  bestScoreText: {fileID: 564358083}
 --- !u!4 &602910284
 Transform:
   m_ObjectHideFlags: 0
