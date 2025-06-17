@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class GameEndGravityManager : MonoBehaviour
 {
@@ -64,7 +65,7 @@ public class GameEndGravityManager : MonoBehaviour
         }
 
         // 게임 오버 패널 페이드 인
-        StartCoroutine(FadeInGameOverPanel());
+        FadeInGameOverPanel();
     }
 
     private float GetTopMostY(UIGravityBreak[] breakers)
@@ -89,22 +90,15 @@ public class GameEndGravityManager : MonoBehaviour
         return maxY;
     }
 
-    private IEnumerator FadeInGameOverPanel()
+    private void FadeInGameOverPanel()
     {
-        if (gameOverPanelGroup == null) yield break;
+        if (gameOverPanelGroup == null) return;
 
         gameOverPanelGroup.alpha = 0f;
-        gameOverPanelGroup.gameObject.SetActive(true); // 패널이 비활성화되어 있다면 활성화
+        gameOverPanelGroup.gameObject.SetActive(true);
 
-        float elapsed = 0f;
-
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.deltaTime;
-            gameOverPanelGroup.alpha = Mathf.Clamp01(elapsed / fadeDuration);
-            yield return null;
-        }
-
-        gameOverPanelGroup.alpha = 1f; // 완전히 보이게 설정
+        gameOverPanelGroup.DOFade(1f, fadeDuration)
+                          .SetEase(Ease.InOutQuad); 
     }
 }
+
