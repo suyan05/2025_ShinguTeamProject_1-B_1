@@ -17,6 +17,8 @@ public class BubbleShooter : MonoBehaviour
     public BubbleData[] bubbleDataList; // ScriptableObject 배열
     public int currentUnlockLevel = 1; // 현재 플레이어 해금 단계
 
+    public Transform shoootedBubbleParent; // 버블이 생성될 부모 오브젝트
+
     void Start()
     {
         GenerateNextBubble(); //첫 번째 버블 생성
@@ -47,7 +49,9 @@ public class BubbleShooter : MonoBehaviour
     {
         canShoot = false; //발사 후 일시적으로 추가 발사 금지
 
-        GameObject bubbleObj = Instantiate(bubbleDataList[nextBubbleIndex].prefab, firePoint.position, Quaternion.identity);
+        //발사한 버블 자식으로 넣기
+        GameObject bubbleObj = Instantiate(bubbleDataList[nextBubbleIndex].prefab,firePoint.position,Quaternion.identity,shoootedBubbleParent);
+
         Bubble bubbleScript = bubbleObj.GetComponent<Bubble>();
 
         float shootAngle = transform.rotation.eulerAngles.z;

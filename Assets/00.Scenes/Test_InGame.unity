@@ -2150,7 +2150,7 @@ MonoBehaviour:
   gameOverPanelGroup: {fileID: 1569818299}
   fadeDuration: 1
   rootCanvas: {fileID: 56426050}
-  firedObjectsParent: {fileID: 0}
+  firedObjectsParent: {fileID: 953392226}
   characterRoot: {fileID: 1425019683}
 --- !u!4 &602910284
 Transform:
@@ -2359,17 +2359,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3e6c1e0216e9284f94a563812aa4b96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bubbleDataList:
-  - {fileID: 11400000, guid: c73a1a1e1b731ce408d48638f6e3fb91, type: 2}
-  - {fileID: 11400000, guid: 0c4038e559b7cb84bb933ffc06db9178, type: 2}
-  - {fileID: 11400000, guid: c01f6244bc1506946b1553d34d5837c5, type: 2}
-  - {fileID: 11400000, guid: 49805db9f3bc7b247a0cf185342cd3ee, type: 2}
   firePoint: {fileID: 673296784}
   bubbleSpeed: 10
   minAngle: -150
   maxAngle: -20
   nextBubbleVisual: {fileID: 1220018460}
+  bubbleDataList:
+  - {fileID: 11400000, guid: c73a1a1e1b731ce408d48638f6e3fb91, type: 2}
+  - {fileID: 11400000, guid: 0c4038e559b7cb84bb933ffc06db9178, type: 2}
+  - {fileID: 11400000, guid: c01f6244bc1506946b1553d34d5837c5, type: 2}
+  - {fileID: 11400000, guid: 49805db9f3bc7b247a0cf185342cd3ee, type: 2}
   currentUnlockLevel: 1
+  shoootedBubbleParent: {fileID: 953392226}
 --- !u!1 &704859118
 GameObject:
   m_ObjectHideFlags: 0
@@ -2958,6 +2959,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 913347306}
   m_CullTransparentMesh: 1
+--- !u!1 &953392225
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 953392226}
+  m_Layer: 0
+  m_Name: ShootedBubbles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &953392226
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 953392225}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &966456361
 GameObject:
   m_ObjectHideFlags: 0
@@ -7219,3 +7251,4 @@ SceneRoots:
   - {fileID: 1425019683}
   - {fileID: 56426050}
   - {fileID: 1889654803}
+  - {fileID: 953392226}
