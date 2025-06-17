@@ -45,13 +45,13 @@ public class GameEndGravityManager : MonoBehaviour
         List<UIGravityBreak> breakers = new List<UIGravityBreak>();
 
         if (rootCanvas != null)
-            breakers.AddRange(rootCanvas.GetComponentsInChildren<UIGravityBreak>());
+            breakers.AddRange(rootCanvas.GetComponentsInChildren<UIGravityBreak>(true));
 
         if (firedObjectsParent != null)
-            breakers.AddRange(firedObjectsParent.GetComponentsInChildren<UIGravityBreak>());
+            breakers.AddRange(firedObjectsParent.GetComponentsInChildren<UIGravityBreak>(true));
 
         if (characterRoot != null)
-            breakers.AddRange(characterRoot.GetComponentsInChildren<UIGravityBreak>());
+            breakers.AddRange(characterRoot.GetComponentsInChildren<UIGravityBreak>(true));
 
         if (breakers.Count == 0) return;
 
@@ -59,10 +59,11 @@ public class GameEndGravityManager : MonoBehaviour
 
         foreach (var breaker in breakers)
         {
+            breaker.enabled = true; // 코드 활성화
             breaker.BreakWithSortedDelay(baseY);
         }
 
-        // 패널 페이드 인 시작
+        // 게임 오버 패널 페이드 인
         StartCoroutine(FadeInGameOverPanel());
     }
 

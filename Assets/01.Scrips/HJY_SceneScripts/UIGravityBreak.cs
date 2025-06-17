@@ -5,25 +5,33 @@ using UnityEngine;
 public class UIGravityBreak : MonoBehaviour
 {
     private Vector3 velocity;
-    private float gravity = -700f;
+    private float gravity = -40f;
     private bool isBreaking = false;
 
-    public float fallSpeedMin = -300f;
-    public float fallSpeedMax = -400f;
-    public float horizontalJitter = 30f;
-    public float maxRotationSpeed = 30f;
+    public float fallSpeedMin = -1.5f;
+    public float fallSpeedMax = -2.5f;
+    public float horizontalJitter = 1.5f;
+    public float maxRotationSpeed = 2f;
 
     private Vector3 rotationVelocity;
     private RectTransform rectTransform;
     private Transform regularTransform;
 
+    private Canvas canvas;
+    private float canvasScaleFactor = 1f;
+    private float uiVelocityBoost = 200f;
+
     private void Awake()
     {
-        // UI용 RectTransform 우선 시도
         rectTransform = GetComponent<RectTransform>();
-        if (rectTransform == null)
+        if (rectTransform != null)
         {
-            // 없으면 일반 Transform 사용
+            canvas = GetComponentInParent<Canvas>();
+            if (canvas != null)
+                canvasScaleFactor = canvas.scaleFactor;
+        }
+        else
+        {
             regularTransform = transform;
         }
     }
@@ -49,6 +57,12 @@ public class UIGravityBreak : MonoBehaviour
         isBreaking = true;
     }
 
+    private void OnEnable()
+    {
+        // 연출 중간에 켜졌을 때도 작동하도록 velocity 초기화 방지
+        if (isBreaking) return;
+    }
+
     void Update()
     {
         if (!isBreaking) return;
@@ -57,7 +71,8 @@ public class UIGravityBreak : MonoBehaviour
 
         if (rectTransform != null)
         {
-            rectTransform.localPosition += velocity * Time.deltaTime;
+            Vector3 uiVelocity = velocity * uiVelocityBoost * Time.deltaTime;
+            rectTransform.localPosition += uiVelocity;
             rectTransform.Rotate(rotationVelocity * Time.deltaTime);
         }
         else

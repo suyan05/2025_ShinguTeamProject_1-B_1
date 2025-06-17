@@ -1,8 +1,9 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class BubbleShooter : MonoBehaviour
 {
-    public GameObject[] bubblePrefabs;  //버블 프리팹 배열
+
     public Transform firePoint;         //버블 발사 위치
     public float bubbleSpeed = 10f;     //버블 발사 속도
     private int nextBubbleIndex;        //다음 발사될 버블 인덱스
@@ -10,6 +11,13 @@ public class BubbleShooter : MonoBehaviour
 
     public float minAngle = -150;       //최소 회전 각도
     public float maxAngle = -20;        //최대 회전 각도
+
+    //06.17 한재용 수정
+    public SpriteRenderer nextBubbleVisual;
+    public BubbleData[] bubbleDataList; // ScriptableObject 배열
+    public int currentUnlockLevel = 1; // 현재 플레이어 해금 단계
+
+    public Transform shoootedBubbleParent; // 버블이 생성될 부모 오브젝트
 
     void Start()
     {
@@ -41,7 +49,9 @@ public class BubbleShooter : MonoBehaviour
     {
         canShoot = false; //발사 후 일시적으로 추가 발사 금지
 
-        GameObject bubbleObj = Instantiate(bubblePrefabs[nextBubbleIndex], firePoint.position, Quaternion.identity);
+        //발사한 버블 자식으로 넣기
+        GameObject bubbleObj = Instantiate(bubbleDataList[nextBubbleIndex].prefab,firePoint.position,Quaternion.identity,shoootedBubbleParent);
+
         Bubble bubbleScript = bubbleObj.GetComponent<Bubble>();
 
         float shootAngle = transform.rotation.eulerAngles.z;
@@ -56,11 +66,40 @@ public class BubbleShooter : MonoBehaviour
 
     public void EnableShooting()
     {
-        canShoot = true; //격자 배치 후 다시 발사 가능
+        canShoot = true;
     }
 
     private void GenerateNextBubble()
     {
-        nextBubbleIndex = Random.Range(0, bubblePrefabs.Length); //랜덤한 프리팹 선택
+        float total = 0f;
+        List<float> weights = new List<float>();
+
+        for (int i = 0; i < bubbleDataList.Length; i++)
+        {
+            float chance = 0f;
+            if (bubbleDataList[i].level <= currentUnlockLevel && currentUnlockLevel - 1 < bubbleDataList[i].unlockChances.Length)
+                chance = bubbleDataList[i].unlockChances[currentUnlockLevel - 1];
+
+            weights.Add(chance);
+            total += chance;
+        }
+
+        float rand = Random.Range(0f, total);
+        float cumulative = 0f;
+
+        for (int i = 0; i < weights.Count; i++)
+        {
+            cumulative += weights[i];
+            if (rand <= cumulative)
+            {
+                nextBubbleIndex = i;
+                nextBubbleVisual.sprite = bubbleDataList[i].prefab.GetComponent<SpriteRenderer>().sprite;
+                return;
+            }
+        }
+
+        // fallback
+        nextBubbleIndex = 0;
+        nextBubbleVisual.sprite = bubbleDataList[0].prefab.GetComponent<SpriteRenderer>().sprite;
     }
 }
