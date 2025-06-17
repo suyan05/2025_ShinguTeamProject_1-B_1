@@ -57,7 +57,7 @@ public class BubbleGrid : MonoBehaviour
             {
                 connectedBubbles.Add(current);
 
-                foreach (Vector2Int neighbor in GetNeighbors(current.x, current.y))
+                foreach (Vector2Int neighbor in GetHexNeighbors(current.x, current.y))
                 {
                     if (grid[neighbor.y, neighbor.x] != null && !connectedBubbles.Contains(neighbor))
                         queue.Enqueue(neighbor);
@@ -68,21 +68,32 @@ public class BubbleGrid : MonoBehaviour
         return connectedBubbles;
     }
 
-    // 주어진 위치의 이웃 좌표 반환
-    // 상하좌우 이웃 반환
-    private List<Vector2Int> GetNeighbors(int x, int y)
+    private List<Vector2Int> GetHexNeighbors(int x, int y)
     {
-        var ret = new List<Vector2Int>();
-        int[] dx = { -1, 1, 0, 0 };
-        int[] dy = { 0, 0, -1, 1 };
-        for (int i = 0; i < 4; i++)
+        var neighbors = new List<Vector2Int>();
+        Vector2Int[] evenOffsets = {
+        new(0, -1), new(1, -1), new(1, 0),
+        new(0, 1),  new(-1, 0), new(-1, -1)
+    };
+
+        Vector2Int[] oddOffsets = {
+        new(0, -1), new(1, 0), new(1, 1),
+        new(0, 1),  new(-1, 1), new(-1, 0)
+    };
+
+        var offsets = (y % 2 == 0) ? evenOffsets : oddOffsets;
+
+        foreach (var offset in offsets)
         {
-            int nx = x + dx[i], ny = y + dy[i];
+            int nx = x + offset.x;
+            int ny = y + offset.y;
             if (nx >= 0 && nx < cols && ny >= 0 && ny < rows)
-                ret.Add(new Vector2Int(nx, ny));
+                neighbors.Add(new(nx, ny));
         }
-        return ret;
+
+        return neighbors;
     }
+
 
 
     // 연결되지 않은 버블 아래로 이동 및 연결된 버블 탐색
@@ -184,21 +195,29 @@ public class BubbleGrid : MonoBehaviour
     }
 
 
-    // 버블 배치
     public void PlaceBubble(Bubble b)
     {
         if (isGameOver) return;
 
-        // 1) 위치 스냅
+        // 1) 위치 스냅 (주변 빈 칸 확인)
         Vector2 snap = FindNearestEmptyGrid(b.transform.position);
-        b.transform.position = snap;
 
-        // 2) 그리드 등록
+        // 기존 버블이 있는지 확인
         Vector2Int cell = WorldToCell(snap);
+        if (grid[cell.y, cell.x] != null)
+        {
+            snap = FindLowestAvailableCell(cell.x, cell.y); // 가장 낮은 빈 공간 찾기
+        }
+
+        // 2) 버블 위치 설정
+        b.transform.position = snap;
+        cell = WorldToCell(snap);
+
+        // 3) 격자 등록 (기존 버블 위치 유지)
         b.placedOrder = placeCounter++;
         grid[cell.y, cell.x] = b;
 
-        // 3) 게임오버 체크 (버블 기준)
+        // 4) 게임오버 체크
         if (b.transform.position.y >= maxHeight)
         {
             isGameOver = true;
@@ -206,12 +225,13 @@ public class BubbleGrid : MonoBehaviour
             return;
         }
 
-        // 4) 주변 같은 레벨 클러스터 합치기
+        // 5) 주변 같은 레벨 클러스터 합치기
         TryMerge(cell.x, cell.y);
 
-        // 5) 합친 뒤 끊긴 버블들 떨어뜨리기
+        // 6) 합친 뒤 끊긴 버블들 떨어뜨리기 (기존 버블 위치 유지)
         RepositionDisconnectedBubbles();
     }
+
 
     // 같은 레벨 클러스터 탐색 & 합치기
     private void TryMerge(int sx, int sy)
@@ -221,71 +241,46 @@ public class BubbleGrid : MonoBehaviour
 
         int lvl = start.level;
         bool[,] visited = new bool[rows, cols];
-        var queue = new Queue<Vector2Int>();
-        var cluster = new List<Vector2Int>();
+        Queue<Vector2Int> queue = new();
+        List<Vector2Int> cluster = new();
 
         queue.Enqueue(new Vector2Int(sx, sy));
         visited[sy, sx] = true;
 
-        // BFS로 같은 레벨 수집
         while (queue.Count > 0)
         {
-            var cur = queue.Dequeue();
-            cluster.Add(cur);
+            Vector2Int current = queue.Dequeue();
+            cluster.Add(current);
 
-            foreach (var n in GetNeighbors(cur.x, cur.y))
+            foreach (var neighbor in GetHexNeighbors(current.x, current.y))
             {
-                if (!visited[n.y, n.x] &&
-                    grid[n.y, n.x] != null &&
-                    grid[n.y, n.x].level == lvl)
+                if (!visited[neighbor.y, neighbor.x] &&
+                    grid[neighbor.y, neighbor.x] != null &&
+                    grid[neighbor.y, neighbor.x].level == lvl)
                 {
-                    visited[n.y, n.x] = true;
-                    queue.Enqueue(n);
+                    visited[neighbor.y, neighbor.x] = true;
+                    queue.Enqueue(neighbor);
                 }
             }
         }
 
-        // 3개 이상 모이면 합치기
-        if (cluster.Count >= 3)
+        if (cluster.Count >= 2)
         {
-            // 1) 배치 순서 기준 정렬
-            cluster.Sort((a, b) =>
-                grid[a.y, a.x].placedOrder.CompareTo(grid[b.y, b.x].placedOrder)
-            );
+            cluster.Sort((a, b) => grid[a.y, a.x].placedOrder.CompareTo(grid[b.y, b.x].placedOrder));
 
-            // 2) 기준 버블 업그레이드
             Vector2Int baseCell = cluster[0];
-            Bubble baseB = grid[baseCell.y, baseCell.x];
-            baseB.level++;
-            baseB.RefreshVisual();
+            Bubble baseBubble = grid[baseCell.y, baseCell.x];
+            baseBubble.level++;
+            baseBubble.RefreshVisual();
             gameManager.AddScore(lvl * 10);
 
-            // 3) 나머지 클러스터 모두 제거
             for (int i = 1; i < cluster.Count; i++)
             {
-                var c = cluster[i];
-                Destroy(grid[c.y, c.x].gameObject);
-                grid[c.y, c.x] = null;
+                Vector2Int pos = cluster[i];
+                Destroy(grid[pos.y, pos.x].gameObject);
+                grid[pos.y, pos.x] = null;
                 gameManager.AddScore(lvl * 10);
             }
-
-            // 4) 기준 버블 기준 2칸 반경 내 모든 버블 제거
-            for (int dy = -2; dy <= 2; dy++)
-                for (int dx = -2; dx <= 2; dx++)
-                {
-                    int nx = baseCell.x + dx;
-                    int ny = baseCell.y + dy;
-                    if (nx >= 0 && nx < cols && ny >= 0 && ny < rows)
-                    {
-                        Bubble victim = grid[ny, nx];
-                        if (victim != null && !(nx == baseCell.x && ny == baseCell.y))
-                        {
-                            Destroy(victim.gameObject);
-                            grid[ny, nx] = null;
-                            gameManager.AddScore(victim.level * 10);
-                        }
-                    }
-                }
         }
     }
 

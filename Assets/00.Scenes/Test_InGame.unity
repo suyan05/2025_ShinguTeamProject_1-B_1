@@ -2363,14 +2363,10 @@ MonoBehaviour:
   bubbleSpeed: 10
   minAngle: -150
   maxAngle: -20
-  nextBubbleVisual: {fileID: 1220018460}
-  bubbleDataList:
-  - {fileID: 11400000, guid: c73a1a1e1b731ce408d48638f6e3fb91, type: 2}
-  - {fileID: 11400000, guid: 0c4038e559b7cb84bb933ffc06db9178, type: 2}
-  - {fileID: 11400000, guid: c01f6244bc1506946b1553d34d5837c5, type: 2}
-  - {fileID: 11400000, guid: 49805db9f3bc7b247a0cf185342cd3ee, type: 2}
+  nextBubbleVisual: {fileID: 0}
+  bubbleDataList: []
   currentUnlockLevel: 1
-  shoootedBubbleParent: {fileID: 953392226}
+  shoootedBubbleParent: {fileID: 0}
 --- !u!1 &704859118
 GameObject:
   m_ObjectHideFlags: 0
@@ -4675,9 +4671,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8171b802579152c419c8d3d27b7b46d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 13
-  cols: 8
+  rows: 9
+  cols: 13
   bubbleSize: 1
+  gridColor: {r: 0, g: 1, b: 0, a: 1}
   maxHeight: 2.5
   isGameOver: 0
 --- !u!4 &1390396399
