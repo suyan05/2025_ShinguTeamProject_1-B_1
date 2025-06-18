@@ -70,7 +70,7 @@ public class Bubble : MonoBehaviour
             isPlaced = true;
 
             Vector2 snapped = bubbleGrid.FindNearestEmptyGrid(transform.position);
-            transform.position = snapped;
+            transform.position = snapped; 
             bubbleGrid.PlaceBubble(this);
 
             rb.velocity = Vector2.zero;
@@ -87,4 +87,12 @@ public class Bubble : MonoBehaviour
             spriteRenderer.sprite = levelSprites[level - 1];
         }
     }
+
+    // 병합 후 레벨 증가 및 이미지 변경
+    public void MergeBubble()
+    {
+        level++;
+        RefreshVisual(); // 병합 후 새로운 이미지 적용
+    }
+
 }

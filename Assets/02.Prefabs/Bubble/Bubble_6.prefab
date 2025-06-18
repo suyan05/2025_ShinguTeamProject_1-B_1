@@ -127,10 +127,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0944488de6083e428096a7d4d476143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 3787026010170535107, guid: 958c43ccef99b8c45ba29727e01188d7, type: 3}
   level: 6
   placedOrder: 0
-  spriteRenderer: {fileID: 0}
-  levelSprites: []
+  spriteRenderer: {fileID: 671341598485491697}
+  levelSprites:
+  - {fileID: 21300000, guid: e8931cda27b2dd64dbca79a180fd70d7, type: 3}
+  - {fileID: 21300000, guid: ae598a702cd1dd2439d4eb42363b290e, type: 3}
+  - {fileID: 21300000, guid: ee6de9d8cc243d14682e37f0929224bd, type: 3}
+  - {fileID: 21300000, guid: f37c42f062d669e4498c9044243d11f2, type: 3}
+  - {fileID: 21300000, guid: e816816b46ef1914094d48a1f50b467e, type: 3}
+  - {fileID: 21300000, guid: 1a3cb51c72573b041a4a657974c7f9df, type: 3}
+  - {fileID: 21300000, guid: e486419285e53cb48bcd672d283b1826, type: 3}
+  - {fileID: 21300000, guid: 87db3f82ba4ca7b44aca673fba1a1ae4, type: 3}
 --- !u!58 &2415155384005865896
 CircleCollider2D:
   m_ObjectHideFlags: 0

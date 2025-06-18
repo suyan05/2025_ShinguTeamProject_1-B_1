@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
     //[SerializeField] TextMeshProUGUI lastHighScoreText;
 
     private GameEndGravityManager gravityManager;
+    private BubbleShooter bubbleShooter; // BubbleShooter 참조
+
+    private int maxBubbleLevel = 1; // 최고 병합된 버블 레벨
 
     private void Start()
     {
@@ -22,6 +25,8 @@ public class GameManager : MonoBehaviour
         HighScore = ScoreSaveSystem.SaveSystem.LoadHighScore();
 
         gravityManager = FindObjectOfType<GameEndGravityManager>(); // 참조 설정
+        bubbleShooter = FindObjectOfType<BubbleShooter>(); // BubbleShooter 찾기
+
         UpdateScoreUI();
     }
 
@@ -56,9 +61,27 @@ public class GameManager : MonoBehaviour
 
     public void BubbleMerged(int level)
     {
-        int points = level * 10; //합쳐진 버블의 레벨에 따라 점수 증가
+        int points = level * 10;
         AddScore(points);
+
+        if (level > maxBubbleLevel)
+        {
+            maxBubbleLevel = level;
+
+            // BubbleShooter의 currentUnlockLevel 즉시 업데이트
+            if (bubbleShooter != null)
+            {
+                bubbleShooter.UpdateCurrentUnlockLevel(maxBubbleLevel);
+            }
+        }
     }
+
+    public int GetMaxBubbleLevel()
+    {
+        return maxBubbleLevel;
+    }
+
+
 
     public void BubbleRemoved(Vector2 position)
     {
@@ -72,11 +95,10 @@ public class GameManager : MonoBehaviour
         //[한재용]최종 점수 저장
         SaveSystem.SaveScore(HighScore);
 
-        UnityEditor.EditorApplication.isPlaying = false; // 에디터에서 게임 일시 정지
-        /*if (gravityManager != null)
+        if (gravityManager != null)
         {
             gravityManager.TriggerSortedBreak(); // 게임 오버 시 중력 정리 실행
-        }*/
+        }
     }
 
 }

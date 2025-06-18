@@ -26,8 +26,13 @@ public class BubbleShooter : MonoBehaviour
 
     private bool canShoot = true; // 발사 가능 여부
 
+    private GameManager gameManager;
+
+
     void Start()
     {
+        gameManager = FindObjectOfType<GameManager>(); // GameManager 참조
+        UpdateCurrentUnlockLevel(gameManager.GetMaxBubbleLevel()); // 시작할 때 최신 레벨 반영
         // 처음 시작할 때는 nextBubbleData만 먼저 뽑고, PrepareNextBubble에서 current로 옮긴다
         nextBubbleData = GetRandomBubbleData();
         PrepareNextBubble();
@@ -39,6 +44,11 @@ public class BubbleShooter : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && canShoot)
             ShootBubble();
+    }
+
+    public void UpdateCurrentUnlockLevel(int newLevel)
+    {
+        currentUnlockLevel = Mathf.Clamp(newLevel, 1, 7);
     }
 
     private void RotateTowardsMouse()
