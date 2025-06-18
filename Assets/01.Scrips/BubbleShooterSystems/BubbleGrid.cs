@@ -1,19 +1,24 @@
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BubbleGrid : MonoBehaviour
 {
+    public Dictionary<int, int> levelScores = new Dictionary<int, int>
+    {
+        {1, 5}, {2, 15}, {3, 30}, {4, 50}, {5, 75}, {6, 100}, {7, 150}
+    };
+
     public int rows = 10;
     public int cols = 6;
     public float bubbleSize = 1f;
     public Color gridColor = Color.green; // 그리드 색상
-    public float maxHeight = 7f; //게임 오버 높이 기준
+    public float maxHeight = 7f; // 게임 오버 높이 기준
     public bool isGameOver = false;
 
     [Header("그리드 상/하/좌/우 간격")]
-    public float horizontalSpacing = 1.0f; // 가로 간격
-    public float verticalSpacing = 1.2f; // 세로 간격
-
+    public float horizontalSpacing = 1.0f;
+    public float verticalSpacing = 1.2f;
 
     private Bubble[,] grid;
     private GameManager gameManager;
@@ -21,8 +26,22 @@ public class BubbleGrid : MonoBehaviour
 
     void Start()
     {
-        grid = new Bubble[rows, cols]; //격자 배열 초기화
-        gameManager = FindObjectOfType<GameManager>(); //게임 매니저 참조
+        gameManager = FindObjectOfType<GameManager>(); // 게임 매니저 참조
+        InitializeGrid(); // 수정된 그리드 초기화
+    }
+
+    private void InitializeGrid()
+    {
+        grid = new Bubble[rows, cols];
+
+        for (int y = 0; y < rows; y++)
+        {
+            int actualCols = (y % 2 == 1) ? cols - 1 : cols; // 홀수 줄이면 cols - 1
+            for (int x = 0; x < actualCols; x++)
+            {
+                grid[y, x] = null;
+            }
+        }
     }
 
     private void OnDrawGizmos()
@@ -31,13 +50,15 @@ public class BubbleGrid : MonoBehaviour
 
         for (int y = 0; y < rows; y++)
         {
-            for (int x = 0; x < cols; x++)
+            int actualCols = (y % 2 == 1) ? cols - 1 : cols; // 홀수 줄 줄이기 적용
+            for (int x = 0; x < actualCols; x++)
             {
                 Vector2 position = GetGridPosition(x, y);
                 Gizmos.DrawWireSphere(position, bubbleSize * 0.4f); // 작은 원으로 표시
             }
         }
     }
+
 
 
     // 버블이 바닥과 연결되어 있는지 확인
@@ -76,27 +97,29 @@ public class BubbleGrid : MonoBehaviour
     {
         var neighbors = new List<Vector2Int>();
         Vector2Int[] evenOffsets = {
-        new(0, -1), new(1, -1), new(1, 0),
-        new(0, 1),  new(-1, 0), new(-1, -1)
-    };
+            new(0, -1), new(1, -1), new(1, 0),
+            new(0, 1), new(-1, 0), new(-1, -1)
+        };
 
         Vector2Int[] oddOffsets = {
-        new(0, -1), new(1, 0), new(1, 1),
-        new(0, 1),  new(-1, 1), new(-1, 0)
-    };
+            new(0, -1), new(1, 0), new(1, 1),
+            new(0, 1), new(-1, 1), new(-1, 0)
+        };
 
-        var offsets = (y % 2 == 0) ? evenOffsets : oddOffsets;
+        var offsets = (y % 2 == 1) ? oddOffsets : evenOffsets;
+        int actualCols = (y % 2 == 1) ? cols - 1 : cols; // 홀수 줄은 cols-1 적용
 
         foreach (var offset in offsets)
         {
             int nx = x + offset.x;
             int ny = y + offset.y;
-            if (nx >= 0 && nx < cols && ny >= 0 && ny < rows)
+            if (nx >= 0 && nx < actualCols && ny >= 0 && ny < rows)
                 neighbors.Add(new(nx, ny));
         }
 
         return neighbors;
     }
+
 
     public void RemoveNearbyBubbles(Vector2Int basePosition)
 {
@@ -237,25 +260,21 @@ private bool IsValidPosition(Vector2Int pos)
     {
         if (isGameOver) return;
 
-        // 1) 위치 스냅 (주변 빈 칸 확인)
         Vector2 snap = FindNearestEmptyGrid(b.transform.position);
-
-        // 기존 버블이 있는지 확인
         Vector2Int cell = WorldToCell(snap);
-        if (grid[cell.y, cell.x] != null)
-        {
-            snap = FindLowestAvailableCell(cell.x, cell.y); // 가장 낮은 빈 공간 찾기
-        }
 
-        // 2) 버블 위치 설정
+        int actualCols = (cell.y % 2 == 1) ? cols - 1 : cols;
+        if (cell.x >= actualCols) cell.x = actualCols - 1; // x 값이 초과되지 않도록 조정
+
+        if (grid[cell.y, cell.x] != null)
+            snap = FindLowestAvailableCell(cell.x, cell.y); // 빈 공간 탐색
+
         b.transform.position = snap;
         cell = WorldToCell(snap);
 
-        // 3) 격자 등록 (기존 버블 위치 유지)
         b.placedOrder = placeCounter++;
         grid[cell.y, cell.x] = b;
 
-        // 4) 게임오버 체크
         if (b.transform.position.y >= maxHeight)
         {
             isGameOver = true;
@@ -263,13 +282,9 @@ private bool IsValidPosition(Vector2Int pos)
             return;
         }
 
-        // 5) 주변 같은 레벨 클러스터 합치기
         TryMerge(cell.x, cell.y);
-
-        // 6) 합친 뒤 끊긴 버블들 떨어뜨리기 (기존 버블 위치 유지)
         RepositionDisconnectedBubbles();
     }
-
 
     // 같은 레벨 클러스터 탐색 & 합치기
     private void TryMerge(int sx, int sy)
@@ -302,28 +317,52 @@ private bool IsValidPosition(Vector2Int pos)
             }
         }
 
-        if (cluster.Count >= 3)
+        if (cluster.Count >= 3) // 3개 이상이면 병합
         {
             cluster.Sort((a, b) => grid[a.y, a.x].placedOrder.CompareTo(grid[b.y, b.x].placedOrder));
 
             Vector2Int baseCell = cluster[0];
             Bubble baseBubble = grid[baseCell.y, baseCell.x];
-            baseBubble.level++;
-            baseBubble.RefreshVisual();
-            gameManager.AddScore(lvl * 10);
 
-            for (int i = 1; i < cluster.Count; i++)
+            int baseScore = levelScores.TryGetValue(lvl, out int basePoints) ? basePoints : lvl * 10;
+            gameManager.AddScore(baseScore); // 기본 점수 추가
+
+            int additionalCount = cluster.Count - 3;
+            if (additionalCount > 0)
             {
-                Vector2Int pos = cluster[i];
-                Destroy(grid[pos.y, pos.x].gameObject);
-                grid[pos.y, pos.x] = null;
-                gameManager.AddScore(lvl * 10);
+                int additionalScore = baseScore / 2 * additionalCount;
+                gameManager.AddScore(additionalScore);
             }
+
+            Sequence mergeSequence = DOTween.Sequence();
+            foreach (var pos in cluster)
+            {
+                Bubble bubble = grid[pos.y, pos.x];
+                mergeSequence.Append(bubble.transform.DOScale(Vector3.one * 1.2f, 0.2f))
+                             .Append(bubble.transform.DOScale(Vector3.one * 0.8f, 0.2f));
+            }
+
+            mergeSequence.OnComplete(() =>
+            {
+                baseBubble.level++;
+                baseBubble.RefreshVisual();
+
+                for (int i = 1; i < cluster.Count; i++)
+                {
+                    Vector2Int pos = cluster[i];
+                    Destroy(grid[pos.y, pos.x].gameObject);
+                    grid[pos.y, pos.x] = null;
+                }
+
+                // 병합 후 다시 주변을 검사하여 연쇄 병합 실행
+                TryMerge(baseCell.x, baseCell.y);
+            });
+
+            mergeSequence.Play();
         }
     }
 
-
-    private Vector2Int WorldPosToCell(Vector2 worldPos)
+    /*private Vector2Int WorldPosToCell(Vector2 worldPos)
     {
         // GetGridPosition(x,y) 의 역연산
         float gridWidth = cols * bubbleSize;
@@ -347,7 +386,5 @@ private bool IsValidPosition(Vector2Int pos)
                 return true;
         }
         return false;
-    }
-
-
+    }*/
 }

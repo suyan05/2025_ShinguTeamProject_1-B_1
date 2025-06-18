@@ -6,7 +6,7 @@ using static ScoreSaveSystem;
 
 public class GameManager : MonoBehaviour
 {
-    private Dictionary<int, int> levelScores = new Dictionary<int, int>
+    public Dictionary<int, int> levelScores = new Dictionary<int, int>
     {
         {1, 5}, {2, 15}, {3, 30}, {4, 50}, {5, 75}, {6, 100}, {7, 150}
     };
@@ -93,7 +93,12 @@ public class GameManager : MonoBehaviour
         return maxBubbleLevel;
     }
 
-
+    public int GetScoreForLevel(int level)
+    {
+        if (levelScores.TryGetValue(level, out int score))
+            return score;  // levelScores 딕셔너리에 값이 있으면 반환
+        return 10; // 기본값
+    }
 
     public void BubbleRemoved(Vector2 position)
     {
