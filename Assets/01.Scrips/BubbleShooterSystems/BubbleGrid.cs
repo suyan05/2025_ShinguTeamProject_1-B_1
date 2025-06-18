@@ -334,31 +334,24 @@ private bool IsValidPosition(Vector2Int pos)
                 gameManager.AddScore(additionalScore);
             }
 
-            Sequence mergeSequence = DOTween.Sequence();
             foreach (var pos in cluster)
             {
                 Bubble bubble = grid[pos.y, pos.x];
-                mergeSequence.Append(bubble.transform.DOScale(Vector3.one * 1.2f, 0.2f))
-                             .Append(bubble.transform.DOScale(Vector3.one * 0.8f, 0.2f));
+                bubble.PlayMergeAnimation(); // 병합 애니메이션 실행
             }
 
-            mergeSequence.OnComplete(() =>
+            baseBubble.level++;
+            baseBubble.RefreshVisual();
+
+            for (int i = 1; i < cluster.Count; i++)
             {
-                baseBubble.level++;
-                baseBubble.RefreshVisual();
+                Vector2Int pos = cluster[i];
+                Destroy(grid[pos.y, pos.x].gameObject);
+                grid[pos.y, pos.x] = null;
+            }
 
-                for (int i = 1; i < cluster.Count; i++)
-                {
-                    Vector2Int pos = cluster[i];
-                    Destroy(grid[pos.y, pos.x].gameObject);
-                    grid[pos.y, pos.x] = null;
-                }
-
-                // 병합 후 다시 주변을 검사하여 연쇄 병합 실행
-                TryMerge(baseCell.x, baseCell.y);
-            });
-
-            mergeSequence.Play();
+            // 병합 후 다시 주변을 검사하여 연쇄 병합 실행
+            TryMerge(baseCell.x, baseCell.y);
         }
     }
 
