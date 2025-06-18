@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e486419285e53cb48bcd672d283b1826, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fc0195471e180e6459d1edffce1819ab, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -127,8 +127,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0944488de6083e428096a7d4d476143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  placedOrder: 0
   level: 7
+  placedOrder: 0
+  spriteRenderer: {fileID: 0}
+  levelSprites: []
 --- !u!58 &69135478831595391
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -176,7 +178,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5aa6c4d453866a24b93c97d16390b9e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fallSpeedMin: -1.5
-  fallSpeedMax: -2.5
+  fallDistanceMin: 150
+  fallDistanceMax: 250
   horizontalJitter: 1.5
-  maxRotationSpeed: 2
+  maxRotation: 90
+  fadeOutDuration: 1.8
