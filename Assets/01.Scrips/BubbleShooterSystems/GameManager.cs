@@ -14,6 +14,12 @@ public class GameManager : MonoBehaviour
     public int Score { get; private set; }      //캡슐화
     public int HighScore { get; private set; }
 
+    // 게임 오버 여부
+    public bool gameOver = false;
+
+    // 최대 높이 (이 높이를 초과하면 게임 오버)
+    public float maxHeight = 10f;
+
     [Header("UI")]
     [SerializeField] TextMeshProUGUI currentScoreText;
     [SerializeField] TextMeshProUGUI highScoreText;
@@ -43,6 +49,13 @@ public class GameManager : MonoBehaviour
         {
             AddScore(10);
         }
+
+        // 아직 게임 오버가 아니면 계속해서 게임 오버 상태를 확인
+        if (!gameOver && CheckGameOver())
+        {
+            GameOver();
+        }
+
     }
 
     public void AddScore(int amount)
@@ -81,6 +94,17 @@ public class GameManager : MonoBehaviour
         AddScore(10); //버블이 사라질 때 기본 점수 추가
     }
 
+    //게임 오버 체크 함수
+    public bool CheckGameOver()
+    {
+        foreach (Bubble bubble in FindObjectsOfType<Bubble>()) // 모든 버블 검사
+        {
+            if (bubble.transform.position.y >= maxHeight) // 특정 높이 초과 여부 확인
+                return true;
+        }
+        return false;
+    }
+
     public void GameOver()
     {
         Debug.Log("Game Over!"); // 콘솔 출력
@@ -93,5 +117,4 @@ public class GameManager : MonoBehaviour
             gravityManager.TriggerSortedBreak(); // 게임 오버 시 중력 정리 실행
         }
     }
-
 }

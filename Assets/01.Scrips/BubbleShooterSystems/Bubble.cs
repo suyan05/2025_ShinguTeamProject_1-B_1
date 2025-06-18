@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class Bubble : MonoBehaviour
@@ -14,7 +15,11 @@ public class Bubble : MonoBehaviour
     private bool isPlaced = false;
 
     public int level;
+    public bool isConnectedToGround = false; //바닥과 연결 여부 확인용 변수
+
     [HideInInspector] public int placedOrder; // 배치 순서 (병합 기준)
+
+    public GameObject mergeAnimationImage;
 
     [Header("Visual")]
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -26,9 +31,12 @@ public class Bubble : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         bubbleGrid = FindObjectOfType<BubbleGrid>();
         bubbleShooter = FindObjectOfType<BubbleShooter>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
 
         RefreshVisual(); // 시작 시 스프라이트 갱신
+
+        placedOrder = Time.frameCount;
     }
 
     void Update()
@@ -41,14 +49,37 @@ public class Bubble : MonoBehaviour
 
     public void PlayMergeAnimation()
     {
-        if (animator != null)
-            animator.Play("Merge_Animation"); // 병합 애니메이션 트리거
+        mergeAnimationImage.SetActive(true); // 애니메이션 이미지 활성화
+        spriteRenderer.DOFade(0.5f, 0.3f); // 불투명도 낮춤
+
+        DOVirtual.DelayedCall(0.6f, () => EndMergeAnimation()); // 일정 시간 후 애니메이션 종료
     }
+
+    private void EndMergeAnimation()
+    {
+        mergeAnimationImage.SetActive(false); // 애니메이션 이미지 비활성화
+        spriteRenderer.DOFade(1f, 0.3f); // 불투명도 복구
+
+        level++; //애니메이션이 끝난 후 레벨 증가!
+        FindObjectOfType<BubbleGrid>().FinishMergeProcess(this);
+    }
+
 
     public void PlayExplosionAnimation()
     {
         if (animator != null)
-            animator.Play("Explosion_Animation");
+        {
+            // 애니메이션 트리거를 사용하여 폭발 애니메이션 실행
+            animator.SetTrigger("Explode");
+
+            // 애니메이션 클립의 길이에 맞춰 오브젝트 제거 (여기서는 1초 후로 설정)
+            Destroy(gameObject, 1f);
+        }
+        else
+        {
+            Debug.LogWarning("Animator 컴포넌트를 찾을 수 없습니다.");
+            Destroy(gameObject, 1f);
+        }
     }
 
     public void SetDirection(Vector2 dir) => direction = dir.normalized;

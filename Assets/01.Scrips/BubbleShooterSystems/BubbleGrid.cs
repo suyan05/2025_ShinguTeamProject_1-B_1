@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class BubbleGrid : MonoBehaviour
 {
+    public static BubbleGrid Instance { get; private set; }
+
     public int rows = 10;
     public int cols = 6;
     public float bubbleSize = 1f;
     public Color gridColor = Color.green; // 그리드 색상
-    public float maxHeight = 7f; // 게임 오버 높이 기준
     public bool isGameOver = false;
 
     [Header("그리드 상/하/좌/우 간격")]
@@ -18,6 +19,14 @@ public class BubbleGrid : MonoBehaviour
     private Bubble[,] grid;
     private GameManager gameManager;
     private int placeCounter = 0;
+
+    void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject); // 중복 생성 방지
+    }
 
     void Start()
     {
@@ -36,7 +45,7 @@ public class BubbleGrid : MonoBehaviour
 
         for (int y = 0; y < rows; y++)
         {
-            int actualCols = (y % 2 == 1) ? cols - 1 : cols; // 홀수 줄이면 cols - 1
+            int actualCols = (y % 2 == 1) ? cols - 1 : cols;
             for (int x = 0; x < actualCols; x++)
             {
                 grid[y, x] = null;
@@ -79,70 +88,107 @@ public class BubbleGrid : MonoBehaviour
 
 
     // 버블이 바닥과 연결되어 있는지 확인
-    public HashSet<Vector2Int> CheckConnectedBubbles()
+    public void CheckConnectedBubbles()
     {
-        HashSet<Vector2Int> connectedBubbles = new HashSet<Vector2Int>();
-        Queue<Vector2Int> queue = new Queue<Vector2Int>();
-
-        // 바닥에 있는 모든 버블을 시작점으로 추가
-        for (int x = 0; x < cols; x++)
+        // 1. 우선 모든 버블의 연결 상태를 false로 초기화
+        for (int y = 0; y < rows; y++)
         {
-            if (grid[0, x] != null) //바닥에 존재하는 버블만 큐에 추가
-                queue.Enqueue(new Vector2Int(x, 0));
-        }
-
-        while (queue.Count > 0)
-        {
-            Vector2Int current = queue.Dequeue();
-            if (!connectedBubbles.Contains(current))
+            for (int x = 0; x < cols; x++)
             {
-                connectedBubbles.Add(current);
-
-                foreach (Vector2Int neighbor in GetHexNeighbors(current.x, current.y))
-                {
-                    if (grid[neighbor.y, neighbor.x] != null && !connectedBubbles.Contains(neighbor))
-                        queue.Enqueue(neighbor);
-                }
+                if (grid[y, x] != null)
+                    grid[y, x].isConnectedToGround = false;
             }
         }
 
-        return connectedBubbles;
+        HashSet<Vector2Int> connected = new HashSet<Vector2Int>();
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+
+        // 2. 바닥으로 간주하는 행은 마지막 행 (rows - 1)
+        for (int x = 0; x < cols; x++)
+        {
+            if (grid[rows - 1, x] != null)
+            {
+                Vector2Int pos = new Vector2Int(x, rows - 1);
+                queue.Enqueue(pos);
+                grid[rows - 1, x].isConnectedToGround = true; // 바닥에 있는 버블은 무조건 true
+            }
+        }
+
+        // 3. BFS 탐색을 통해 바닥과 연결된 모든 버블에 대해 isConnectedToGround를 true로 설정
+        while (queue.Count > 0)
+        {
+            Vector2Int current = queue.Dequeue();
+            if (!connected.Contains(current))
+            {
+                connected.Add(current);
+
+                foreach (Vector2Int neighbor in GetHexNeighbors(current.x, current.y))
+                {
+                    if (grid[neighbor.y, neighbor.x] != null && !connected.Contains(neighbor))
+                    {
+                        queue.Enqueue(neighbor);
+                        grid[neighbor.y, neighbor.x].isConnectedToGround = true;
+                    }
+                }
+            }
+        }
+        // BFS로 방문하지 않은 버블은 이미 false 상태이므로 그대로 둡니다.
     }
 
     private List<Vector2Int> GetHexNeighbors(int x, int y)
     {
-        var neighbors = new List<Vector2Int>();
+        List<Vector2Int> neighbors = new List<Vector2Int>();
 
-        Vector2Int[] evenOffsets = {
-        new(0, -1), new(1, -1), new(1, 0),
-        new(0, 1), new(-1, 0), new(-1, -1)
-    };
-
-        Vector2Int[] oddOffsets = {
-        new(0, -1), new(1, 0), new(1, 1),
-        new(0, 1), new(-1, 1), new(-1, 0)
-    };
-
-        var offsets = (y % 2 == 0) ? evenOffsets : oddOffsets;
-        int actualCols = (y % 2 == 1) ? cols - 1 : cols; // 홀수 줄의 제한 적용
-
-        foreach (var offset in offsets)
+        if (y % 2 == 0) // 짝수 행
         {
-            Vector2Int pos = new(x + offset.x, y + offset.y);
-            if (IsValidPosition(pos)) // 유효한 위치인지 검사하여 정확한 탐색 가능
+            Vector2Int[] evenOffsets = {
+            new Vector2Int(-1, -1), // NW
+            new Vector2Int(0, -1),  // NE
+            new Vector2Int(1, 0),   // E
+            new Vector2Int(0, 1),   // SE
+            new Vector2Int(-1, 1),  // SW
+            new Vector2Int(-1, 0)   // W
+        };
+
+            foreach (Vector2Int offset in evenOffsets)
             {
-                neighbors.Add(pos);
+                Vector2Int neighborPos = new Vector2Int(x + offset.x, y + offset.y);
+                if (IsValidPosition(neighborPos))
+                {
+                    neighbors.Add(neighborPos);
+                }
+            }
+        }
+        else // 홀수 행
+        {
+            Vector2Int[] oddOffsets = {
+            new Vector2Int(0, -1),  // NW
+            new Vector2Int(1, -1),  // NE
+            new Vector2Int(1, 0),   // E
+            new Vector2Int(1, 1),   // SE
+            new Vector2Int(0, 1),   // SW
+            new Vector2Int(-1, 0)   // W
+        };
+
+            foreach (Vector2Int offset in oddOffsets)
+            {
+                Vector2Int neighborPos = new Vector2Int(x + offset.x, y + offset.y);
+                if (IsValidPosition(neighborPos))
+                {
+                    neighbors.Add(neighborPos);
+                }
             }
         }
 
         return neighbors;
     }
 
+
     private void RemoveNearbyBubbles(Vector2Int basePosition)
     {
-        List<Vector2Int> bubblesToRemove = new List<Vector2Int>();
+        List<Vector2Int> bubblesToRemove = new();
 
-        for (int y = -2; y <= 2; y++) // 2칸 범위 검사
+        for (int y = -2; y <= 2; y++)
         {
             for (int x = -2; x <= 2; x++)
             {
@@ -163,31 +209,36 @@ public class BubbleGrid : MonoBehaviour
 
     private bool IsValidPosition(Vector2Int pos)
     {
-        int actualCols = (pos.y % 2 == 1) ? cols - 1 : cols; // 홀수 줄이면 cols - 1 적용
-        return pos.x >= 0 && pos.x < actualCols && pos.y >= 0 && pos.y < rows;
+        //int actualCols = (pos.y % 2 == 1) ? cols - 1 : cols; // 홀수 줄이면 cols - 1 적용
+        return pos.x >= 0 && pos.x < cols && pos.y >= 0 && pos.y < rows;
     }
 
     // 연결되지 않은 버블 아래로 이동 및 연결된 버블 탐색
     // 연결되지 않은 버블 아래로 이동 (중력 적용)
     public void RepositionDisconnectedBubbles()
     {
-        var connected = CheckConnectedBubbles();
+        // 먼저 현재 터치한 후 연결 여부 업데이트
+        CheckConnectedBubbles();
 
-        for (int y = rows - 1; y >= 0; y--) // 아래쪽부터 탐색
+        // 바닥과 연결되지 않은 버블을 한 칸씩 내림.
+        // (아래쪽 행은 바닥이므로 rows - 2 부터 진행)
+        for (int y = rows - 2; y >= 0; y--)
         {
             for (int x = 0; x < cols; x++)
             {
-                if (grid[y, x] != null && !connected.Contains(new Vector2Int(x, y))) //연결되지 않은 경우만 처리
+                Bubble bubble = grid[y, x];
+                if (bubble != null && !bubble.isConnectedToGround)
                 {
-                    Bubble fallingBubble = grid[y, x];
+                    // 현재 셀에서 삭제 후 한 칸 아래 셀로 이동
                     grid[y, x] = null;
+                    Vector2Int targetCell = new Vector2Int(x, y + 1);
 
-                    Vector2Int targetCell = FindLowestAvailableCell(x, y);
-                    if (IsValidPosition(targetCell) && targetCell.y >= 0) //빈 칸이 유효한지 확인 후 이동
+                    if (IsValidPosition(targetCell) && grid[targetCell.y, targetCell.x] == null)
                     {
-                        Vector2 targetPosition = GetGridPosition(targetCell.x, targetCell.y);
-                        fallingBubble.transform.position = targetPosition;
-                        grid[targetCell.y, targetCell.x] = fallingBubble;
+                        // 그리드 좌표를 월드 좌표로 변환하여 버블 이동
+                        Vector2 targetPos = GetGridPosition(targetCell.x, targetCell.y);
+                        bubble.transform.position = targetPos;
+                        grid[targetCell.y, targetCell.x] = bubble;
                     }
                 }
             }
@@ -268,31 +319,20 @@ public class BubbleGrid : MonoBehaviour
     {
         if (isGameOver) return;
 
-        Vector2 snap = FindNearestEmptyGrid(b.transform.position);
-        Vector2Int cell = WorldToCell(snap);
+        Vector2Int cell = WorldToCell(b.transform.position);
+        int actualCols = (cell.y % 2 == 1) ? cols - 1 : cols;
+        if (cell.x >= actualCols) cell.x = actualCols - 1;
 
         if (grid[cell.y, cell.x] != null)
-            snap = FindLowestAvailableCell(cell.x, cell.y);
+            cell = FindLowestAvailableCell(cell.x, cell.y);
 
-        b.transform.position = snap;
-        cell = WorldToCell(snap);
-
-        b.placedOrder = placeCounter++;
+        b.transform.position = GetGridPosition(cell.x, cell.y);
         grid[cell.y, cell.x] = b;
 
-        // 버블 배치 후 최고 레벨 갱신
         FindObjectOfType<BubbleShooter>().UpdateCurrentUnlockLevel();
-
-        if (b.transform.position.y >= maxHeight)
-        {
-            isGameOver = true;
-            gameManager.GameOver();
-            return;
-        }
-
         TryMerge(cell.x, cell.y);
-        RepositionDisconnectedBubbles();
     }
+
 
     // 같은 레벨 클러스터 탐색 & 합치기
     private void TryMerge(int sx, int sy)
@@ -325,18 +365,13 @@ public class BubbleGrid : MonoBehaviour
             }
         }
 
-        if (cluster.Count >= 3) // 3개 이상일 때 병합
+        if (cluster.Count >= 3)
         {
+            //가장 먼저 배치된 버블을 기준으로 정렬 (placedOrder 값 기준)
             cluster.Sort((a, b) => grid[a.y, a.x].placedOrder.CompareTo(grid[b.y, b.x].placedOrder));
 
-            Vector2Int baseCell = cluster[0];
+            Vector2Int baseCell = cluster[0]; // 가장 먼저 배치된 버블 선택
             Bubble baseBubble = grid[baseCell.y, baseCell.x];
-
-            int baseScore = gameManager.levelScores.TryGetValue(lvl, out int basePoints) ? basePoints : lvl * 10;
-            int additionalCount = cluster.Count - 3;
-            int additionalScore = additionalCount * (baseScore / 2);
-
-            gameManager.AddScore(baseScore + additionalScore);
 
             foreach (var pos in cluster)
             {
@@ -344,14 +379,15 @@ public class BubbleGrid : MonoBehaviour
                 bubble.PlayMergeAnimation();
             }
 
-            baseBubble.level++;
-            baseBubble.RefreshVisual();
 
-            // 최종 등급 도달 시 폭발 애니메이션 실행 및 주변 제거
-            if (baseBubble.level >= 8) // 최종 등급 체크
+            if (baseBubble.level >= 7)
             {
                 baseBubble.PlayExplosionAnimation();
                 RemoveNearbyBubbles(baseCell);
+            }
+            else
+            {
+                baseBubble.RefreshVisual();
             }
 
             for (int i = 1; i < cluster.Count; i++)
@@ -361,9 +397,30 @@ public class BubbleGrid : MonoBehaviour
                 grid[pos.y, pos.x] = null;
             }
 
-            TryMerge(baseCell.x, baseCell.y);
+            TryMerge(baseCell.x, baseCell.y); //연속 병합 실행
         }
     }
+
+
+
+    public void FinishMergeProcess(Bubble bubble)
+    {
+        Vector2Int cell = WorldToCell(bubble.transform.position);
+
+        if (bubble.level >= 8) // 최종 등급 도달 시 폭발 애니메이션 실행
+        {
+            bubble.PlayExplosionAnimation();
+            RemoveNearbyBubbles(cell);
+        }
+        else
+        {
+            bubble.RefreshVisual(); // 레벨 증가 후 UI 업데이트
+        }
+
+        TryMerge(cell.x, cell.y); //연속 병합 실행
+    }
+}
+
 
     /*private Vector2Int WorldPosToCell(Vector2 worldPos)
     {
@@ -380,14 +437,5 @@ public class BubbleGrid : MonoBehaviour
         return new Vector2Int(x, y);
     }
 
-    //게임 오버 체크 함수
-    public bool CheckGameOver()
-    {
-        foreach (Bubble bubble in FindObjectsOfType<Bubble>()) // 모든 버블 검사
-        {
-            if (bubble.transform.position.y >= maxHeight) // 특정 높이 초과 여부 확인
-                return true;
-        }
-        return false;
+    
     }*/
-}
