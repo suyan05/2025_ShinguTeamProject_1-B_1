@@ -6,6 +6,8 @@ using System.Collections;
 
 public class BubbleShooter : MonoBehaviour
 {
+    public GameObject maxLevelBubblePrefab;
+
     public Sprite[] rotateSprites; //캐릭터 회전 배열
     private SpriteRenderer characterSpriteRenderer;
     private Coroutine rotateAnimCoroutine;
@@ -51,6 +53,11 @@ public class BubbleShooter : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && canShoot)
             ShootBubble();
+
+        if (Input.GetKeyDown(KeyCode.X) && canShoot)
+        {
+            ShootSpecificBubble(maxLevelBubblePrefab);
+        }
     }
 
     public void UpdateCurrentUnlockLevel()
@@ -220,4 +227,46 @@ public class BubbleShooter : MonoBehaviour
             yield return new WaitForSeconds(timePerFrame);
         }
     }
+
+    public void ShootSpecificBubble(GameObject prefab)
+    {
+        canShoot = false;
+
+        if (characterTransform != null)
+        {
+            characterTransform.DOJump(characterTransform.position, 0.2f, 1, 0.3f).SetEase(Ease.OutQuad);
+            rotateAnimCoroutine = StartCoroutine(PlayRotateAnimation(0.3f));
+
+            DOVirtual.DelayedCall(0.3f, () =>
+            {
+                if (rotateAnimCoroutine != null)
+                {
+                    StopCoroutine(rotateAnimCoroutine);
+                    rotateAnimCoroutine = null;
+                    characterSpriteRenderer.sprite = rotateSprites[0];
+                }
+            });
+        }
+
+        // 버블 생성
+        GameObject bubbleObj = Instantiate(
+            prefab,
+            firePoint.position,
+            Quaternion.identity,
+            shoootedBubbleParent
+        );
+
+        bubbleObj.transform.localScale = Vector3.one * 0.035f;
+        bubbleObj.transform.DOScale(0.065f, 0.3f).SetEase(Ease.OutBack);
+
+        Bubble b = bubbleObj.GetComponent<Bubble>();
+
+        float angle = transform.rotation.eulerAngles.z;
+        Vector2 shootDir = new Vector2(-Mathf.Sin(angle * Mathf.Deg2Rad), Mathf.Cos(angle * Mathf.Deg2Rad));
+
+        b.SetDirection(shootDir);
+        b.SetSpeed(bubbleSpeed);
+        b.SetShooter(this);
+    }
+
 }

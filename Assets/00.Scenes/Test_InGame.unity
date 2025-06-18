@@ -2348,6 +2348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3e6c1e0216e9284f94a563812aa4b96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxLevelBubblePrefab: {fileID: 7662959656610435480, guid: 42a25a4e1aa262f489d741f7ae8f217a, type: 3}
   rotateSprites:
   - {fileID: 21300000, guid: d0faaf593b6f5b941a06332675c71278, type: 3}
   - {fileID: 21300000, guid: 9f86ee37484adb247bcaddcc77dadb03, type: 3}
