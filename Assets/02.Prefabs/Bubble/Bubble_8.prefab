@@ -132,14 +132,14 @@ MonoBehaviour:
   placedOrder: 0
   spriteRenderer: {fileID: 3701640418783195003}
   levelSprites:
-  - {fileID: 21300000, guid: e8931cda27b2dd64dbca79a180fd70d7, type: 3}
-  - {fileID: 21300000, guid: ae598a702cd1dd2439d4eb42363b290e, type: 3}
-  - {fileID: 21300000, guid: ee6de9d8cc243d14682e37f0929224bd, type: 3}
-  - {fileID: 21300000, guid: f37c42f062d669e4498c9044243d11f2, type: 3}
-  - {fileID: 21300000, guid: e816816b46ef1914094d48a1f50b467e, type: 3}
-  - {fileID: 21300000, guid: 1a3cb51c72573b041a4a657974c7f9df, type: 3}
-  - {fileID: 21300000, guid: e486419285e53cb48bcd672d283b1826, type: 3}
-  - {fileID: 21300000, guid: 87db3f82ba4ca7b44aca673fba1a1ae4, type: 3}
+  - {fileID: 21300000, guid: 316bb301724f79b4bb90de15090815b3, type: 3}
+  - {fileID: 21300000, guid: f54fd9db28635b94384f3bee5bdf75d4, type: 3}
+  - {fileID: 21300000, guid: b49d282a1878e74429279f169ca0a89b, type: 3}
+  - {fileID: 21300000, guid: 7d63bbd0fb0870644bafbc8d581a87e4, type: 3}
+  - {fileID: 21300000, guid: 688173b7df2964c4e8a83eaccb3d6692, type: 3}
+  - {fileID: 21300000, guid: 75c2eab3666710741bb32c4138c68c8a, type: 3}
+  - {fileID: 21300000, guid: fc0195471e180e6459d1edffce1819ab, type: 3}
+  - {fileID: 21300000, guid: ca7c2a481613ffc4c8add8f506aefbbc, type: 3}
 --- !u!58 &-4383789717686469773
 CircleCollider2D:
   m_ObjectHideFlags: 0

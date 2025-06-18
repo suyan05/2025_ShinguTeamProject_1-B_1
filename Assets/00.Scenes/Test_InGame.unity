@@ -4666,13 +4666,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rows: 9
-  cols: 12
+  cols: 11
   bubbleSize: 1
   gridColor: {r: 0, g: 1, b: 0, a: 1}
   maxHeight: 2.5
   isGameOver: 0
-  horizontalSpacing: 1.05
-  verticalSpacing: 1
+  horizontalSpacing: 1.09
+  verticalSpacing: 0.94
 --- !u!4 &1390396399
 Transform:
   m_ObjectHideFlags: 0
@@ -6893,7 +6893,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.09411766, g: 0.15686275, b: 0.4901961, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
