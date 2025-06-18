@@ -53,6 +53,13 @@ public class BubbleShooter : MonoBehaviour
             ShootBubble();
     }
 
+    public void UpdateCurrentUnlockLevel()
+    {
+        int highestLevel = FindObjectOfType<BubbleGrid>().GetHighestBubbleLevel();
+        currentUnlockLevel = Mathf.Max(currentUnlockLevel, highestLevel); // 증가만 가능, 감소 X
+    }
+
+
     public void UpdateCurrentUnlockLevel(int newLevel)
     {
         currentUnlockLevel = Mathf.Clamp(newLevel, 1, 7);

@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public Dictionary<int, int> levelScores = new Dictionary<int, int>
     {
-        {1, 5}, {2, 15}, {3, 30}, {4, 50}, {5, 75}, {6, 100}, {7, 150}
+        {1, 20}, {2, 40}, {3, 80}, {4, 140}, {5, 220}, {6, 330}, {7, 480}, {8, 1000}
     };
 
     public int Score { get; private set; }      //캡슐화
@@ -63,30 +63,6 @@ public class GameManager : MonoBehaviour
         currentScoreText.text = Score.ToString();
         highScoreText.text = HighScore.ToString();
     }
-
-
-    public void BubbleMerged(int level, Vector2Int basePosition)
-{
-    int points = level * 10;
-    AddScore(points);
-
-    if (level > maxBubbleLevel)
-    {
-        maxBubbleLevel = level;
-
-        if (bubbleShooter != null)
-        {
-            bubbleShooter.UpdateCurrentUnlockLevel(maxBubbleLevel);
-        }
-    }
-
-    // 최종 레벨일 때 주변 버블 제거
-    if (level >= 7) // 최종 레벨 기준
-    {
-        FindObjectOfType<BubbleGrid>().RemoveNearbyBubbles(basePosition);
-    }
-}
-
 
     public int GetMaxBubbleLevel()
     {
