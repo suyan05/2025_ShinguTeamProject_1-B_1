@@ -10,6 +10,10 @@ public class BubbleGrid : MonoBehaviour
     public float maxHeight = 7f; //게임 오버 높이 기준
     public bool isGameOver = false;
 
+    [Header("그리드 상/하/좌/우 간격")]
+    public float horizontalSpacing = 1.0f; // 가로 간격
+    public float verticalSpacing = 1.2f; // 세로 간격
+
 
     private Bubble[,] grid;
     private GameManager gameManager;
@@ -94,6 +98,37 @@ public class BubbleGrid : MonoBehaviour
         return neighbors;
     }
 
+    public void RemoveNearbyBubbles(Vector2Int basePosition)
+{
+    List<Vector2Int> bubblesToRemove = new List<Vector2Int>();
+
+    for (int y = -2; y <= 2; y++)
+    {
+        for (int x = -2; x <= 2; x++)
+        {
+            Vector2Int pos = new Vector2Int(basePosition.x + x, basePosition.y + y);
+            if (IsValidPosition(pos) && grid[pos.y, pos.x] != null)
+            {
+                bubblesToRemove.Add(pos);
+            }
+        }
+    }
+
+    int totalPoints = 0;
+    foreach (Vector2Int pos in bubblesToRemove)
+    {
+        totalPoints += grid[pos.y, pos.x].level * 10; // 제거된 버블의 점수 추가
+        Destroy(grid[pos.y, pos.x].gameObject);
+        grid[pos.y, pos.x] = null;
+    }
+
+    FindObjectOfType<GameManager>().AddScore(totalPoints);
+}
+
+private bool IsValidPosition(Vector2Int pos)
+{
+    return pos.x >= 0 && pos.x < cols && pos.y >= 0 && pos.y < rows;
+}
 
 
     // 연결되지 않은 버블 아래로 이동 및 연결된 버블 탐색
@@ -142,16 +177,17 @@ public class BubbleGrid : MonoBehaviour
     // 월드 좌표 → 그리드 인덱스
     private Vector2Int WorldToCell(Vector2 worldPos)
     {
-        float gridW = cols * bubbleSize;
-        float gridH = rows * bubbleSize;
-        Vector2 origin = new Vector2(-gridW / 2 + bubbleSize / 2, gridH / 2 - bubbleSize / 2);
+        float gridW = cols * horizontalSpacing;
+        float gridH = rows * verticalSpacing;
+        Vector2 origin = new Vector2(-gridW / 2 + horizontalSpacing / 2, gridH / 2 - verticalSpacing / 2);
 
         int y = Mathf.Clamp(
-            Mathf.RoundToInt((origin.y - worldPos.y) / bubbleSize),
+            Mathf.RoundToInt((origin.y - worldPos.y) / verticalSpacing),
             0, rows - 1);
-        float xOffset = (y % 2 == 0 ? 0f : bubbleSize / 2f);
+
+        float xOffset = (y % 2 == 0 ? 0f : horizontalSpacing / 2f);
         int x = Mathf.Clamp(
-            Mathf.RoundToInt((worldPos.x - origin.x - xOffset) / bubbleSize),
+            Mathf.RoundToInt((worldPos.x - origin.x - xOffset) / horizontalSpacing),
             0, cols - 1);
 
         return new Vector2Int(x, y);
@@ -187,12 +223,14 @@ public class BubbleGrid : MonoBehaviour
     // 그리드 → 월드 좌표
     public Vector2 GetGridPosition(int x, int y)
     {
-        float gridW = cols * bubbleSize;
-        float gridH = rows * bubbleSize;
-        Vector2 origin = new Vector2(-gridW / 2 + bubbleSize / 2, gridH / 2 - bubbleSize / 2);
-        float xOff = (y % 2 == 0 ? 0f : bubbleSize / 2f);
-        return new Vector2(origin.x + x * bubbleSize + xOff, origin.y - y * bubbleSize);
+        float gridW = cols * horizontalSpacing;
+        float gridH = rows * verticalSpacing;
+        Vector2 origin = new Vector2(-gridW / 2 + horizontalSpacing / 2, gridH / 2 - verticalSpacing / 2);
+
+        float xOff = (y % 2 == 0 ? 0f : horizontalSpacing / 2f);
+        return new Vector2(origin.x + x * horizontalSpacing + xOff, origin.y - y * verticalSpacing);
     }
+
 
 
     public void PlaceBubble(Bubble b)
