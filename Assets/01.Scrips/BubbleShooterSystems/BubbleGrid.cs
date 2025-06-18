@@ -264,7 +264,7 @@ public class BubbleGrid : MonoBehaviour
             }
         }
 
-        if (cluster.Count >= 2)
+        if (cluster.Count >= 3)
         {
             cluster.Sort((a, b) => grid[a.y, a.x].placedOrder.CompareTo(grid[b.y, b.x].placedOrder));
 

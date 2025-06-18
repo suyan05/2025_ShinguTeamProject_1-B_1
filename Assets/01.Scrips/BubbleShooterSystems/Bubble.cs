@@ -2,39 +2,89 @@ using UnityEngine;
 
 public class Bubble : MonoBehaviour
 {
-    public int level = 1; // 버블의 현재 레벨
-    public int placedOrder; // 격자에 배치된 순서 (병합 기준 판단용)
+    [SerializeField] private Animator animator;
+
+    private GameManager gameManager;
+    private BubbleGrid bubbleGrid;
+    private BubbleShooter bubbleShooter;
+    private Rigidbody2D rb;
 
     private Vector2 direction;
-    private float speed;
-    private BubbleShooter shooter;
+    private float speed = 5f;
+    private bool isPlaced = false;
 
+    public int level;
+    [HideInInspector] public int placedOrder; // 배치 순서 (병합 기준)
+
+    [Header("Visual")]
     [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private Sprite[] levelSprites; // 레벨별 시각 리소스
+    [SerializeField] private Sprite[] levelSprites; // 레벨별 스프라이트 배열
+
+    void Start()
+    {
+        animator = GetComponent<Animator>();
+        gameManager = FindObjectOfType<GameManager>();
+        bubbleGrid = FindObjectOfType<BubbleGrid>();
+        bubbleShooter = FindObjectOfType<BubbleShooter>();
+        rb = GetComponent<Rigidbody2D>();
+
+        RefreshVisual(); // 시작 시 스프라이트 갱신
+    }
 
     void Update()
     {
-        transform.Translate(direction * speed * Time.deltaTime);
+        if (!isPlaced)
+        {
+            transform.position += (Vector3)(direction * Time.deltaTime * speed);
+        }
+    }
+
+    public void PlayMergeAnimation()
+    {
+        if (animator != null)
+            animator.Play("Merge_Animation"); // 병합 애니메이션 트리거
+    }
+
+    public void PlayExplosionAnimation()
+    {
+        if (animator != null)
+            animator.Play("Explosion_Animation");
     }
 
     public void SetDirection(Vector2 dir) => direction = dir.normalized;
-    public void SetSpeed(float s) => speed = s;
-    public void SetShooter(BubbleShooter s) => shooter = s;
-    public void StopMovement() => speed = 0f;
+    public void SetSpeed(float newSpeed) => speed = newSpeed;
+    public void SetShooter(BubbleShooter shooter) => bubbleShooter = shooter;
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            Vector2 normal = collision.contacts[0].normal;
+            direction = Vector2.Reflect(direction, normal);
+            rb.velocity = direction * speed;
+        }
+
+        // 고정 처리: 바닥 또는 다른 버블과 접촉 시 그리드에 배치
+        if (!isPlaced && (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Bubble")))
+        {
+            isPlaced = true;
+
+            Vector2 snapped = bubbleGrid.FindNearestEmptyGrid(transform.position);
+            transform.position = snapped;
+            bubbleGrid.PlaceBubble(this);
+
+            rb.velocity = Vector2.zero;
+            rb.isKinematic = true;
+
+            bubbleShooter?.EnableShooting();
+        }
+    }
 
     public void RefreshVisual()
     {
         if (spriteRenderer != null && level - 1 >= 0 && level - 1 < levelSprites.Length)
+        {
             spriteRenderer.sprite = levelSprites[level - 1];
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        StopMovement();
-        if (shooter != null) shooter.EnableShooting();
-
-        // 격자 시스템에 버블 등록
-        BubbleGrid grid = FindObjectOfType<BubbleGrid>();
-        if (grid != null) grid.PlaceBubble(this);
+        }
     }
 }
