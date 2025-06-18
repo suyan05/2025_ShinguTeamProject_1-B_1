@@ -2,9 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using DG.Tweening;
+using System.Collections;
 
 public class BubbleShooter : MonoBehaviour
 {
+    public Sprite[] rotateSprites; //캐릭터 회전 배열
+    private SpriteRenderer characterSpriteRenderer;
+    private Coroutine rotateAnimCoroutine;
+
     public Transform firePoint; // 버블 발사 위치
 
     public float bubbleSpeed = 10f; // 버블 발사 속도
@@ -31,6 +36,8 @@ public class BubbleShooter : MonoBehaviour
 
     void Start()
     {
+        characterSpriteRenderer = characterTransform.GetComponent<SpriteRenderer>();
+
         gameManager = FindObjectOfType<GameManager>(); // GameManager 참조
         UpdateCurrentUnlockLevel(gameManager.GetMaxBubbleLevel()); // 시작할 때 최신 레벨 반영
         // 처음 시작할 때는 nextBubbleData만 먼저 뽑고, PrepareNextBubble에서 current로 옮긴다
@@ -70,6 +77,22 @@ public class BubbleShooter : MonoBehaviour
         if (characterTransform != null)
         {
             characterTransform.DOJump(characterTransform.position, 0.2f, 1, 0.3f).SetEase(Ease.OutQuad);
+
+            // 회전 애니메이션 시작
+            rotateAnimCoroutine = StartCoroutine(PlayRotateAnimation(0.3f)); // 0.3초 동안 애니메이션
+
+            // 0.3초 후 코루틴 중지 및 기본 스프라이트 복원
+            DOVirtual.DelayedCall(0.3f, () =>
+            {
+                if (rotateAnimCoroutine != null)
+                {
+                    StopCoroutine(rotateAnimCoroutine);
+                    rotateAnimCoroutine = null;
+
+                    // 기본 스프라이트로 복원 (처음 스프라이트 또는 원하는 스프라이트)
+                    characterSpriteRenderer.sprite = rotateSprites[0];
+                }
+            });
         }
 
         // 현재 발사할 버블 생성
@@ -174,5 +197,20 @@ public class BubbleShooter : MonoBehaviour
 
         // fallback: 아무것도 못 뽑았을 경우 첫 번째 반환
         return bubbleDataList[0];
+    }
+
+    private IEnumerator PlayRotateAnimation(float duration)
+    {
+        if (rotateSprites == null || rotateSprites.Length == 0) yield break;
+
+        float timePerFrame = duration / rotateSprites.Length;
+        int index = 0;
+
+        while (true)
+        {
+            characterSpriteRenderer.sprite = rotateSprites[index];
+            index = (index + 1) % rotateSprites.Length;
+            yield return new WaitForSeconds(timePerFrame);
+        }
     }
 }
