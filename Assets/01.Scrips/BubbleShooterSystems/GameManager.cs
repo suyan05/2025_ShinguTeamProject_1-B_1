@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
@@ -5,6 +6,11 @@ using static ScoreSaveSystem;
 
 public class GameManager : MonoBehaviour
 {
+    private Dictionary<int, int> levelScores = new Dictionary<int, int>
+    {
+        {1, 5}, {2, 15}, {3, 30}, {4, 50}, {5, 75}, {6, 100}, {7, 150}
+    };
+
     public int Score { get; private set; }      //캡슐화
     public int HighScore { get; private set; }
 
@@ -59,22 +65,28 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void BubbleMerged(int level)
+    public void BubbleMerged(int level, Vector2Int basePosition)
+{
+    int points = level * 10;
+    AddScore(points);
+
+    if (level > maxBubbleLevel)
     {
-        int points = level * 10;
-        AddScore(points);
+        maxBubbleLevel = level;
 
-        if (level > maxBubbleLevel)
+        if (bubbleShooter != null)
         {
-            maxBubbleLevel = level;
-
-            // BubbleShooter의 currentUnlockLevel 즉시 업데이트
-            if (bubbleShooter != null)
-            {
-                bubbleShooter.UpdateCurrentUnlockLevel(maxBubbleLevel);
-            }
+            bubbleShooter.UpdateCurrentUnlockLevel(maxBubbleLevel);
         }
     }
+
+    // 최종 레벨일 때 주변 버블 제거
+    if (level >= 7) // 최종 레벨 기준
+    {
+        FindObjectOfType<BubbleGrid>().RemoveNearbyBubbles(basePosition);
+    }
+}
+
 
     public int GetMaxBubbleLevel()
     {

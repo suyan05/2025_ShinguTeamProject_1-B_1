@@ -4666,11 +4666,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rows: 9
-  cols: 13
+  cols: 12
   bubbleSize: 1
   gridColor: {r: 0, g: 1, b: 0, a: 1}
   maxHeight: 2.5
   isGameOver: 0
+  horizontalSpacing: 1.05
+  verticalSpacing: 1
 --- !u!4 &1390396399
 Transform:
   m_ObjectHideFlags: 0
