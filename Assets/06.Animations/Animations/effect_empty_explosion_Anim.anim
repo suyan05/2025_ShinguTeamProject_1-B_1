@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: effect_explosion_0_ani
+  m_Name: effect_empty_explosion_Anim
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
