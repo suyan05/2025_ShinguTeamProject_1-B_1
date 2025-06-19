@@ -186,6 +186,7 @@ public class BubbleGrid : MonoBehaviour
 
                 if (bubble.level >= 8)
                 {
+                    SoundManager.Instance.PlayExplosion();
                     bubble.PlayExplosionAnimation();
                     grid[pos.y, pos.x] = null;
 
@@ -194,6 +195,7 @@ public class BubbleGrid : MonoBehaviour
                 }
                 else
                 {
+                    SoundManager.Instance.PlayMerge();
                     bubble.PlayMergeAnimation();
                     if (pos != baseCell)
                         pendingMergeRemovals.Add(pos);
