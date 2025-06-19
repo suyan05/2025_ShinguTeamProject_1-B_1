@@ -124,13 +124,4 @@ public class Bubble : MonoBehaviour
             spriteRenderer.sprite = levelSprites[level - 1];
         }
     }
-
-    // 병합 후 레벨 증가 및 이미지 변경
-    public void MergeBubble()
-    {
-        level++;
-        RefreshVisual(); // 병합 후 새로운 이미지 적용
-
-
-    }
 }
