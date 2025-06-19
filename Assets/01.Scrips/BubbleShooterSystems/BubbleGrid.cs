@@ -168,6 +168,8 @@ public class BubbleGrid : MonoBehaviour
         // 2. 3개 이상일 때만 병합 진행
         if (cluster.Count >= 3)
         {
+            FindObjectOfType<BubbleShooter>().isMerging = true;
+
             cluster.Sort((a, b) => grid[a.y, a.x].placedOrder.CompareTo(grid[b.y, b.x].placedOrder));
             Vector2Int baseCell = cluster[0];
             Bubble baseBubble = grid[baseCell.y, baseCell.x];
@@ -259,6 +261,8 @@ public class BubbleGrid : MonoBehaviour
 
         // 병합된 버블로 인해 추가 병합 가능성 재확인
         TryMerge(cell.x, cell.y);
+
+        FindObjectOfType<BubbleShooter>().isMerging = false;
     }
 
     public List<Vector2Int> GetHexNeighbors(int x, int y)

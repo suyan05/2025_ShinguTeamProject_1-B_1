@@ -33,14 +33,19 @@ public class BubbleShooter : MonoBehaviour
     public Transform shoootedBubbleParent; // 발사된 버블의 부모 객체
 
     public bool canShoot = true; // 발사 가능 여부
+    public bool isMerging = false;
 
     private GameManager gameManager;
 
     public RectTransform areaInGameRect;
 
+    private bool isShootSun = false;
+
 
     void Start()
     {
+        isShootSun = false;
+
         characterSpriteRenderer = characterTransform.GetComponent<SpriteRenderer>();
 
         gameManager = FindObjectOfType<GameManager>(); // GameManager 참조
@@ -54,14 +59,37 @@ public class BubbleShooter : MonoBehaviour
     {
         RotateTowardsMouse();
 
-        if (Input.GetMouseButtonDown(0) && canShoot && IsMouseInInGameArea())
+        if (!Input.GetKey(KeyCode.X) && Input.GetMouseButtonDown(0) && canShoot && !isMerging && IsMouseInInGameArea())
         {
             ShootBubble();
         }
 
-        if (Input.GetKeyDown(KeyCode.X) && canShoot)
+        if (Input.GetKeyUp(KeyCode.LeftShift) && Input.GetKeyUp(KeyCode.RightShift))
         {
-            ShootSpecificBubble(maxLevelBubblePrefab);
+            if (!isShootSun)
+            {
+                isShootSun = true;
+                Debug.Log("isShootSun True");
+            }
+        }
+
+        // 발사 처리
+        if (isShootSun && canShoot && !isMerging)
+        {
+            if (Input.GetKey(KeyCode.X))
+            {
+                if (Input.GetMouseButtonDown(0))
+                    ShootSpecificBubble(maxLevelBubblePrefab);
+            }
+            else if (Input.anyKeyDown) // 어떤 키라도 눌렸을 때
+            {
+                // 단, X 키는 예외 (이미 위에서 처리했으니까)
+                if (!Input.GetKeyDown(KeyCode.X) || !Input.GetMouseButtonDown(0))
+                {
+                    isShootSun = false;
+                    Debug.Log("isShootSun False");
+                }
+            }
         }
     }
 
