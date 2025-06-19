@@ -23,12 +23,10 @@ public class GameManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] TextMeshProUGUI currentScoreText;
     [SerializeField] TextMeshProUGUI highScoreText;
-    //[SerializeField] TextMeshProUGUI lastScoreText;
-    //[SerializeField] TextMeshProUGUI lastHighScoreText;
 
     private GameEndGravityManager gravityManager;
     private BubbleShooter bubbleShooter; // BubbleShooter 참조
-
+    
     private int maxBubbleLevel = 1; // 최고 병합된 버블 레벨
 
     private void Start()

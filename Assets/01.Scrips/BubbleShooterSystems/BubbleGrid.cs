@@ -330,15 +330,20 @@ public class BubbleGrid : MonoBehaviour
         grid[cell.y, cell.x] = b;
 
         FindObjectOfType<BubbleShooter>().UpdateCurrentUnlockLevel();
-        TryMerge(cell.x, cell.y);
+
+        bool merged = TryMerge(cell.x, cell.y);
+        if (!merged)
+        {
+            SoundManager.Instance.PlayAttach();
+        }
     }
 
 
     // 같은 레벨 클러스터 탐색 & 합치기
-    private void TryMerge(int sx, int sy)
+    private bool TryMerge(int sx, int sy)
     {
         Bubble start = grid[sy, sx];
-        if (start == null) return;
+        if (start == null) return false;
 
         int lvl = start.level;
         Queue<Vector2Int> queue = new();
@@ -367,10 +372,9 @@ public class BubbleGrid : MonoBehaviour
 
         if (cluster.Count >= 3)
         {
-            //가장 먼저 배치된 버블을 기준으로 정렬 (placedOrder 값 기준)
             cluster.Sort((a, b) => grid[a.y, a.x].placedOrder.CompareTo(grid[b.y, b.x].placedOrder));
 
-            Vector2Int baseCell = cluster[0]; // 가장 먼저 배치된 버블 선택
+            Vector2Int baseCell = cluster[0];
             Bubble baseBubble = grid[baseCell.y, baseCell.x];
 
             foreach (var pos in cluster)
@@ -378,7 +382,6 @@ public class BubbleGrid : MonoBehaviour
                 Bubble bubble = grid[pos.y, pos.x];
                 bubble.PlayMergeAnimation();
             }
-
 
             if (baseBubble.level >= 7)
             {
@@ -397,8 +400,14 @@ public class BubbleGrid : MonoBehaviour
                 grid[pos.y, pos.x] = null;
             }
 
-            TryMerge(baseCell.x, baseCell.y); //연속 병합 실행
+            SoundManager.Instance.PlayMerge();
+
+            TryMerge(baseCell.x, baseCell.y); // 연속 병합
+
+            return true;  // 병합 성공
         }
+
+        return false; // 병합 실패
     }
 
 
