@@ -18,7 +18,7 @@ public class BubbleGrid : MonoBehaviour
 
     private Bubble[,] grid;
     private GameManager gameManager;
-    private int placeCounter = 0;
+    //private int placeCounter = 0;
 
     void Awake()
     {

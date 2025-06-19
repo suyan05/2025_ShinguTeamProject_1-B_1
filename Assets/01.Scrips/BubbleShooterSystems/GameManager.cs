@@ -107,6 +107,7 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        gameOver = true;
         Debug.Log("Game Over!"); // 콘솔 출력
 
         //[한재용]최종 점수 저장
@@ -114,7 +115,7 @@ public class GameManager : MonoBehaviour
 
         if (gravityManager != null)
         {
-            gravityManager.TriggerSortedBreak(); // 게임 오버 시 중력 정리 실행
+            gravityManager.TriggerGameOverSequence(); // 게임 오버 시 중력 정리 실행
         }
     }
 }
