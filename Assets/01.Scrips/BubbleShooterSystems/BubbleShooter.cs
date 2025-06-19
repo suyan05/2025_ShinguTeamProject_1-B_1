@@ -36,6 +36,8 @@ public class BubbleShooter : MonoBehaviour
 
     private GameManager gameManager;
 
+    public RectTransform areaInGameRect;
+
 
     void Start()
     {
@@ -52,8 +54,10 @@ public class BubbleShooter : MonoBehaviour
     {
         RotateTowardsMouse();
 
-        if (Input.GetMouseButtonDown(0) && canShoot)
+        if (Input.GetMouseButtonDown(0) && canShoot && IsMouseInInGameArea())
+        {
             ShootBubble();
+        }
 
         if (Input.GetKeyDown(KeyCode.X) && canShoot)
         {
@@ -275,4 +279,23 @@ public class BubbleShooter : MonoBehaviour
         b.SetShooter(this);
     }
 
+    private bool IsMouseInInGameArea()
+    {
+        Vector2 mouseScreenPos = Input.mousePosition;
+        Vector2 localPoint;
+
+        // 이미지 RectTransform 기준으로 마우스 위치 변환
+        bool inside = RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            areaInGameRect,
+            mouseScreenPos,
+            Camera.main, // World Space에서는 주로 Camera.main
+            out localPoint
+        );
+
+        if (!inside) return false;
+
+        // 실제 이미지의 Rect 범위 내인지 확인
+        Rect rect = areaInGameRect.rect;
+        return rect.Contains(localPoint);
+    }
 }
