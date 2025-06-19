@@ -48,10 +48,10 @@ MonoBehaviour:
   effectSource: {fileID: 6570041037123702906}
   shootSFX: {fileID: 8300000, guid: b5b1c18b22d813b4ab89b329daa0ef8f, type: 3}
   mergeSFX: {fileID: 8300000, guid: 334f6a781a7cc184d9f01f6bd6118cd3, type: 3}
-  destroySFX: {fileID: 0}
   attachSFX: {fileID: 8300000, guid: 19b34c545607e6e4d9d7a50ce45fb57e, type: 3}
   gameOverSFX: {fileID: 8300000, guid: 5fdb13d3756c84fecac96f5a2d124370, type: 3}
   buttonClickSFX: {fileID: 8300000, guid: d8d04c6f80a1140db85ede568dab1f51, type: 3}
+  PlayExplosionSFX: {fileID: 8300000, guid: 432dd15313a3cb9469e5670658009b59, type: 3}
 --- !u!82 &6570041037123702906
 AudioSource:
   m_ObjectHideFlags: 0

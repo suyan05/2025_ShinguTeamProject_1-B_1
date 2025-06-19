@@ -7757,10 +7757,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SFXManager
       objectReference: {fileID: 0}
-    - target: {fileID: 5010340440040683340, guid: 4d361c4c9afc440478e8e098f1b18762, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6481341704059030182, guid: 4d361c4c9afc440478e8e098f1b18762, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

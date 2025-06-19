@@ -636,10 +636,10 @@ MonoBehaviour:
   effectSource: {fileID: 579866461}
   shootSFX: {fileID: 8300000, guid: b5b1c18b22d813b4ab89b329daa0ef8f, type: 3}
   mergeSFX: {fileID: 8300000, guid: 334f6a781a7cc184d9f01f6bd6118cd3, type: 3}
-  destroySFX: {fileID: 0}
   attachSFX: {fileID: 8300000, guid: 19b34c545607e6e4d9d7a50ce45fb57e, type: 3}
   gameOverSFX: {fileID: 8300000, guid: 5fdb13d3756c84fecac96f5a2d124370, type: 3}
   buttonClickSFX: {fileID: 8300000, guid: d8d04c6f80a1140db85ede568dab1f51, type: 3}
+  PlayExplosionSFX: {fileID: 0}
 --- !u!4 &579866463
 Transform:
   m_ObjectHideFlags: 0
@@ -3429,6 +3429,10 @@ PrefabInstance:
     - target: {fileID: 3725964089046029676, guid: 3fe7be9c90586ac4989006e742d6f91b, type: 3}
       propertyPath: m_Name
       value: MasterBGM
+      objectReference: {fileID: 0}
+    - target: {fileID: 5739965396224544945, guid: 3fe7be9c90586ac4989006e742d6f91b, type: 3}
+      propertyPath: Loop
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8700094150193717212, guid: 3fe7be9c90586ac4989006e742d6f91b, type: 3}
       propertyPath: m_LocalPosition.x
