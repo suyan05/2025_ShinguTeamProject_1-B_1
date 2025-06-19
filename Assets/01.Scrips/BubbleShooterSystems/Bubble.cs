@@ -20,6 +20,7 @@ public class Bubble : MonoBehaviour
     [Header("Animations")]
     public GameObject mergeAnimationImage;
     public GameObject explosionAnimationImage;
+    public GameObject smallExplosionImage;
 
     [Header("Visual")]
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -46,25 +47,22 @@ public class Bubble : MonoBehaviour
         }
     }
 
-    public void PlayMergeAnimation()
+    public void PlayMergeAnimation(bool shouldLevelUp = true)
     {
-        Debug.Log("MergeAnima 시전");
+        mergeAnimationImage.SetActive(true);
+        spriteRenderer.DOFade(0.5f, 0.2f);
 
-        mergeAnimationImage.SetActive(true); // 애니메이션 이미지 활성화
-        spriteRenderer.DOFade(0.5f, 0.3f); // 불투명도 낮춤
+        DOVirtual.DelayedCall(0.6f, () =>
+        {
+            mergeAnimationImage.SetActive(false);
+            spriteRenderer.DOFade(1f, 0.2f);
 
-        DOVirtual.DelayedCall(0.6f, () => EndMergeAnimation()); // 일정 시간 후 애니메이션 종료
+            if (shouldLevelUp)
+                level++;
+
+            BubbleGrid.Instance.FinishMergeProcess(this);
+        });
     }
-
-    private void EndMergeAnimation()
-    {
-        mergeAnimationImage.SetActive(false); // 애니메이션 이미지 비활성화
-        spriteRenderer.DOFade(1f, 0.3f); // 불투명도 복구
-
-        level++; //애니메이션이 끝난 후 레벨 증가!
-        FindObjectOfType<BubbleGrid>().FinishMergeProcess(this);
-    }
-
 
     public void PlayExplosionAnimation(System.Action onComplete = null)
     {
@@ -86,6 +84,29 @@ public class Bubble : MonoBehaviour
             Destroy(gameObject, 1f); // fallback
         }
     }
+
+    public void PlaySmallExplosion()
+    {
+        Debug.Log("SmallAnimation 시전");
+
+        if (smallExplosionImage != null)
+        {
+            smallExplosionImage.SetActive(true);
+            spriteRenderer.DOFade(0.3f, 0.2f);
+
+            DOVirtual.DelayedCall(0.8f, () =>
+            {
+                smallExplosionImage.SetActive(false);
+                spriteRenderer.DOFade(1f, 0.2f);
+                Destroy(gameObject); // 작게 터진 후 삭제
+            });
+        }
+        else
+        {
+            Destroy(gameObject, 1f); // fallback 처리
+        }
+    }
+
 
 
     public void SetDirection(Vector2 dir) => direction = dir.normalized;

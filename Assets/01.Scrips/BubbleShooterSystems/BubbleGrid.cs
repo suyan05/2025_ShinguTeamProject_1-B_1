@@ -186,11 +186,17 @@ public class BubbleGrid : MonoBehaviour
 
                 if (bubble.level >= 8)
                 {
-                    bubble.PlayExplosionAnimation();
-                    grid[pos.y, pos.x] = null;
-
                     if (pos == baseCell)
+                    {
+                        bubble.PlayExplosionAnimation();
                         RemoveNearbyBubbles(baseCell);
+                    }
+                    else
+                    {
+                        bubble.PlaySmallExplosion(); // ← 작은 폭발 효과
+                    }
+
+                    grid[pos.y, pos.x] = null;
                 }
                 else
                 {
@@ -210,27 +216,43 @@ public class BubbleGrid : MonoBehaviour
     {
         Vector2Int cell = WorldToCell(bubble.transform.position);
 
+        // 중심 버블 기준 좌표 저장
+        Vector2Int baseCell = cell;
+
         if (bubble.level >= 8)
         {
-            bubble.PlayExplosionAnimation();
-            RemoveNearbyBubbles(cell);
-            grid[cell.y, cell.x] = null;
+            bubble.PlayExplosionAnimation();         // 중심 버블은 큰 폭발
+            RemoveNearbyBubbles(baseCell);
+            grid[baseCell.y, baseCell.x] = null;
         }
         else
         {
             bubble.RefreshVisual();
         }
 
+        // 병합된 나머지 버블들 제거
         foreach (var pos in pendingMergeRemovals)
         {
             if (grid[pos.y, pos.x] != null)
             {
-                Destroy(grid[pos.y, pos.x].gameObject);
+                Bubble target = grid[pos.y, pos.x];
+
+                if (target.level >= 8)
+                {
+                    target.PlaySmallExplosion();     // 나머지는 작은 폭발
+                }
+                else
+                {
+                    Destroy(target.gameObject);      // 기존처럼 제거
+                }
+
                 grid[pos.y, pos.x] = null;
             }
         }
 
         pendingMergeRemovals.Clear();
+
+        // 병합된 버블로 인해 추가 병합 가능성 재확인
         TryMerge(cell.x, cell.y);
     }
 
@@ -348,8 +370,8 @@ public class BubbleGrid : MonoBehaviour
                     Bubble bubble = grid[pos.y, pos.x];
                     grid[pos.y, pos.x] = null;
 
-                    //폭발 애니메이션 실행 + 애니메이션 끝난 뒤 제거
-                    bubble.PlayExplosionAnimation();
+                    // 작은 폭발 이펙트 실행 → 애니메이션 후 자동 제거
+                    bubble.PlaySmallExplosion();
                 }
             }
         }
