@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Bubble : MonoBehaviour
 {
-    [SerializeField] private Animator animator;
-
     private GameManager gameManager;
     private BubbleGrid bubbleGrid;
     private BubbleShooter bubbleShooter;
@@ -19,7 +17,9 @@ public class Bubble : MonoBehaviour
 
     [HideInInspector] public int placedOrder; // 배치 순서 (병합 기준)
 
+    [Header("Animations")]
     public GameObject mergeAnimationImage;
+    public GameObject explosionAnimationImage;
 
     [Header("Visual")]
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -27,7 +27,6 @@ public class Bubble : MonoBehaviour
 
     void Start()
     {
-        animator = GetComponent<Animator>();
         gameManager = FindObjectOfType<GameManager>();
         bubbleGrid = FindObjectOfType<BubbleGrid>();
         bubbleShooter = FindObjectOfType<BubbleShooter>();
@@ -67,20 +66,23 @@ public class Bubble : MonoBehaviour
 
     public void PlayExplosionAnimation()
     {
-        if (animator != null)
+        if (explosionAnimationImage != null)
         {
-            // 애니메이션 트리거를 사용하여 폭발 애니메이션 실행
-            animator.SetTrigger("Explode");
+            explosionAnimationImage.SetActive(true); // 애니메이션 이미지 표시
+            spriteRenderer.DOFade(0.5f, 0.3f); // 버블 본체 반투명화
 
-            // 애니메이션 클립의 길이에 맞춰 오브젝트 제거 (여기서는 1초 후로 설정)
-            Destroy(gameObject, 1f);
+            DOVirtual.DelayedCall(1f, () =>
+            {
+                Destroy(gameObject); // 애니메이션 후 제거
+            });
         }
         else
         {
-            Debug.LogWarning("Animator 컴포넌트를 찾을 수 없습니다.");
-            Destroy(gameObject, 1f);
+            Debug.LogWarning("Explosion 이미지 오브젝트가 설정되지 않았습니다.");
+            Destroy(gameObject, 1f); // 기본 처리
         }
     }
+
 
     public void SetDirection(Vector2 dir) => direction = dir.normalized;
     public void SetSpeed(float newSpeed) => speed = newSpeed;
