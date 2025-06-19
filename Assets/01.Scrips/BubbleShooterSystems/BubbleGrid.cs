@@ -228,10 +228,10 @@ public class BubbleGrid : MonoBehaviour
                         pendingMergeRemovals.Add(pos);
                 }
             }
-            FindObjectOfType<BubbleShooter>().isMerging = false;
+            
             return true;
         }
-
+        FindObjectOfType<BubbleShooter>().isMerging = false;
         return false;
     }
 
