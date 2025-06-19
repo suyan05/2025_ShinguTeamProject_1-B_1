@@ -48,6 +48,8 @@ public class Bubble : MonoBehaviour
 
     public void PlayMergeAnimation()
     {
+        Debug.Log("MergeAnima 시전");
+
         mergeAnimationImage.SetActive(true); // 애니메이션 이미지 활성화
         spriteRenderer.DOFade(0.5f, 0.3f); // 불투명도 낮춤
 
@@ -64,22 +66,24 @@ public class Bubble : MonoBehaviour
     }
 
 
-    public void PlayExplosionAnimation()
+    public void PlayExplosionAnimation(System.Action onComplete = null)
     {
+        Debug.Log("ExplosionAnimation 시전");
+
         if (explosionAnimationImage != null)
         {
-            explosionAnimationImage.SetActive(true); // 애니메이션 이미지 표시
-            spriteRenderer.DOFade(0.5f, 0.3f); // 버블 본체 반투명화
+            explosionAnimationImage.SetActive(true);
+            spriteRenderer.DOFade(0.5f, 0.3f);
 
             DOVirtual.DelayedCall(1f, () =>
             {
-                Destroy(gameObject); // 애니메이션 후 제거
+                onComplete?.Invoke(); //삭제는 여기서 호출되도록!
+                Destroy(gameObject);
             });
         }
         else
         {
-            Debug.LogWarning("Explosion 이미지 오브젝트가 설정되지 않았습니다.");
-            Destroy(gameObject, 1f); // 기본 처리
+            Destroy(gameObject, 1f); // fallback
         }
     }
 
