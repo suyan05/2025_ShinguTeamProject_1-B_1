@@ -89,11 +89,6 @@ public class GameManager : MonoBehaviour
         return 10; // 기본값
     }
 
-    public void BubbleRemoved(Vector2 position)
-    {
-        AddScore(10); //버블이 사라질 때 기본 점수 추가
-    }
-
     //게임 오버 체크 함수
     public bool CheckGameOver()
     {
