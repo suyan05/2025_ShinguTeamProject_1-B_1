@@ -377,13 +377,24 @@ public class BubbleGrid : MonoBehaviour
             Vector2Int baseCell = cluster[0];
             Bubble baseBubble = grid[baseCell.y, baseCell.x];
 
+            int baseLevel = baseBubble.level;
+            int baseScore = gameManager.levelScores.ContainsKey(baseLevel) ? gameManager.levelScores[baseLevel] : 0;
+            int bonusCount = cluster.Count - 3;
+            int bonusScore = bonusCount * (baseScore / 2);
+            int totalScore = baseScore + bonusScore;
+
+            //점수 반영
+            FindObjectOfType<GameManager>().AddScore(totalScore);
+
+
             foreach (var pos in cluster)
             {
                 Bubble bubble = grid[pos.y, pos.x];
                 bubble.PlayMergeAnimation();
             }
 
-            if (baseBubble.level >= 7)
+
+            if (baseBubble.level >= 8)
             {
                 baseBubble.PlayExplosionAnimation();
                 RemoveNearbyBubbles(baseCell);
@@ -396,7 +407,12 @@ public class BubbleGrid : MonoBehaviour
             for (int i = 1; i < cluster.Count; i++)
             {
                 Vector2Int pos = cluster[i];
-                Destroy(grid[pos.y, pos.x].gameObject);
+                // 병합된 버블 제거
+                if (grid[pos.y, pos.x] != null)
+                {
+                    Destroy(grid[pos.y, pos.x].gameObject);
+                }
+
                 grid[pos.y, pos.x] = null;
             }
 
@@ -429,22 +445,3 @@ public class BubbleGrid : MonoBehaviour
         TryMerge(cell.x, cell.y); //연속 병합 실행
     }
 }
-
-
-    /*private Vector2Int WorldPosToCell(Vector2 worldPos)
-    {
-        // GetGridPosition(x,y) 의 역연산
-        float gridWidth = cols * bubbleSize;
-        float gridHeight = rows * bubbleSize;
-        Vector2 centerOffset = new Vector2(-gridWidth / 2 + bubbleSize / 2, gridHeight / 2 - bubbleSize / 2);
-
-        // 대략적인 y 인덱스
-        int y = Mathf.FloorToInt((centerOffset.y - worldPos.y) / bubbleSize + 0.5f);
-        float xOffset = (y % 2 == 0) ? 0f : bubbleSize / 2f;
-        int x = Mathf.FloorToInt((worldPos.x - centerOffset.x - xOffset) / bubbleSize + 0.5f);
-
-        return new Vector2Int(x, y);
-    }
-
-    
-    }*/
