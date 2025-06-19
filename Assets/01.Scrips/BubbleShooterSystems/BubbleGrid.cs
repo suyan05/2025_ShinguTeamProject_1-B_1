@@ -212,6 +212,7 @@ public class BubbleGrid : MonoBehaviour
                     {
                         bubble.PlayExplosionAnimation();
                         RemoveNearbyBubbles(baseCell);
+                        SoundManager.Instance.PlayExplosion();
                     }
                     else
                     {
