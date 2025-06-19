@@ -34,12 +34,12 @@ public class BubbleShooter : MonoBehaviour
 
     public bool canShoot = true; // 발사 가능 여부
     public bool isMerging = false;
+    private bool isShootSun = false;
 
     private GameManager gameManager;
 
     public RectTransform areaInGameRect;
 
-    private bool isShootSun = false;
 
 
     void Start()
@@ -59,7 +59,7 @@ public class BubbleShooter : MonoBehaviour
     {
         RotateTowardsMouse();
 
-        if (canShoot && IsMouseInInGameArea())
+        if (!isMerging && canShoot && IsMouseInInGameArea())
         {
             if (!Input.GetKey(KeyCode.X) && Input.GetMouseButtonDown(0))
             {
