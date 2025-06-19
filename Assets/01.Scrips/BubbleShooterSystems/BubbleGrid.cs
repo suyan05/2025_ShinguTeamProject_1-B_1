@@ -18,7 +18,7 @@ public class BubbleGrid : MonoBehaviour
 
     private Bubble[,] grid;
     private GameManager gameManager;
-    private int placeCounter = 0;
+    //private int placeCounter = 0;
 
     void Awake()
     {
@@ -148,7 +148,7 @@ public class BubbleGrid : MonoBehaviour
             new Vector2Int(0, 1),   // SE
             new Vector2Int(-1, 1),  // SW
             new Vector2Int(-1, 0)   // W
-        };
+            };
 
             foreach (Vector2Int offset in evenOffsets)
             {
@@ -168,7 +168,7 @@ public class BubbleGrid : MonoBehaviour
             new Vector2Int(1, 1),   // SE
             new Vector2Int(0, 1),   // SW
             new Vector2Int(-1, 0)   // W
-        };
+            };
 
             foreach (Vector2Int offset in oddOffsets)
             {
