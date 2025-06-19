@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using DG.Tweening;
 using System.Collections;
+using UnityEngine.Analytics;
 
 public class BubbleShooter : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class BubbleShooter : MonoBehaviour
 
     public Transform shoootedBubbleParent; // 발사된 버블의 부모 객체
 
-    private bool canShoot = true; // 발사 가능 여부
+    public bool canShoot = true; // 발사 가능 여부
 
     private GameManager gameManager;
 
@@ -87,6 +88,8 @@ public class BubbleShooter : MonoBehaviour
     {
         canShoot = false;
 
+        SoundManager.Instance.PlayShoot();
+
         // 캐릭터 반동 애니메이션
         if (characterTransform != null)
         {
@@ -135,8 +138,11 @@ public class BubbleShooter : MonoBehaviour
         PrepareNextBubble();
     }
 
-    public void EnableShooting() => canShoot = true;
-
+    public void EnableShooting()
+    {
+        if (gameManager.gameOver) return;
+        canShoot = true;
+    }
     // 다음 버블을 현재로 옮기고, 다시 룰렛 돌리기
     private void PrepareNextBubble()
     {

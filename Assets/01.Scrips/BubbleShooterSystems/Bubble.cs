@@ -126,5 +126,7 @@ public class Bubble : MonoBehaviour
     {
         level++;
         RefreshVisual(); // 병합 후 새로운 이미지 적용
+
+
     }
 }
