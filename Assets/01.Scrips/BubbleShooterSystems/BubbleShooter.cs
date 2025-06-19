@@ -59,12 +59,20 @@ public class BubbleShooter : MonoBehaviour
     {
         RotateTowardsMouse();
 
-        if (!Input.GetKey(KeyCode.X) && Input.GetMouseButtonDown(0) && canShoot && !isMerging && IsMouseInInGameArea())
+        if (canShoot && IsMouseInInGameArea())
         {
-            ShootBubble();
+            if (!Input.GetKey(KeyCode.X) && Input.GetMouseButtonDown(0))
+            {
+                ShootBubble();
+            }                
+            else if (Input.GetKey(KeyCode.X) && Input.GetMouseButtonDown(0))
+            {
+                ShootSpecificBubble(maxLevelBubblePrefab);
+            }
         }
 
-        if (Input.GetKeyUp(KeyCode.LeftShift) && Input.GetKeyUp(KeyCode.RightShift))
+        //ġƮ
+        /*if (Input.GetKeyUp(KeyCode.LeftShift) && Input.GetKeyUp(KeyCode.RightShift))
         {
             if (!isShootSun)
             {
@@ -90,7 +98,7 @@ public class BubbleShooter : MonoBehaviour
                     Debug.Log("isShootSun False");
                 }
             }
-        }
+        }*/
     }
 
     public void UpdateCurrentUnlockLevel()
