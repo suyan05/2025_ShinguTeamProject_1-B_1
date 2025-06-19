@@ -8,8 +8,10 @@ public class SoundManager : MonoBehaviour
 
     public AudioClip shootSFX;
     public AudioClip mergeSFX;
-    public AudioClip destroySFX;
     public AudioClip attachSFX;
+    public AudioClip gameOverSFX;
+    public AudioClip buttonClickSFX;
+    public AudioClip PlayExplosionSFX;
     // 필요하면 더 추가...
 
     void Awake()
@@ -39,14 +41,24 @@ public class SoundManager : MonoBehaviour
         PlayEffect(mergeSFX);
     }
 
-    public void PlayDestroy()
-    {
-        PlayEffect(destroySFX);
-    }
-
     public void PlayAttach()
     {
         PlayEffect(attachSFX);
+    }
+
+    public void PlayGameOver()
+    {
+        PlayEffect(gameOverSFX);
+    }
+
+    public void PlayButtonClick()
+    {
+        PlayEffect(buttonClickSFX);
+    }
+
+    public void PlayExplosion()
+    {
+        PlayEffect(PlayExplosionSFX);
     }
 
     private void PlayEffect(AudioClip clip)

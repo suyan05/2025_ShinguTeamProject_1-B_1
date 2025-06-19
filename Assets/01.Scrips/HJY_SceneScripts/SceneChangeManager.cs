@@ -37,6 +37,8 @@ public class SceneChangeManager : MonoBehaviour
 
     IEnumerator FadeOutAndLoad(string sceneName)
     {
+        SoundManager.Instance.PlayButtonClick();
+
         float t = 0;
         Color c = fadeImage.color;
         while (t < fadeDuration)

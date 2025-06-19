@@ -186,6 +186,10 @@ public class BubbleGrid : MonoBehaviour
 
                 if (bubble.level >= 8)
                 {
+                    SoundManager.Instance.PlayExplosion();
+                    bubble.PlayExplosionAnimation();
+                    grid[pos.y, pos.x] = null;
+
                     if (pos == baseCell)
                     {
                         bubble.PlayExplosionAnimation();
