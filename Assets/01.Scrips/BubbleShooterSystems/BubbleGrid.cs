@@ -123,8 +123,24 @@ public class BubbleGrid : MonoBehaviour
 
         FindObjectOfType<BubbleShooter>().UpdateCurrentUnlockLevel();
 
+        // 머지 1차 시도
         bool merged = TryMerge(cell.x, cell.y);
+
+        if (!merged)
+        {
+            // 머지가 안 됐더라도 주변 버블 변화로 인해 병합 가능성이 있는 경우 재시도
+            foreach (var neighbor in GetHexNeighbors(cell.x, cell.y))
+            {
+                if (TryMerge(neighbor.x, neighbor.y))
+                {
+                    merged = true;
+                    break; // 한번이라도 병합되면 종료
+                }
+            }
+        }
+
         if (!merged) SoundManager.Instance.PlayAttach();
+
     }
 
     private Vector2Int FindLowestAvailableCell(int x, int y)
