@@ -75,6 +75,7 @@ public class Bubble : MonoBehaviour
 
             DOVirtual.DelayedCall(1f, () =>
             {
+                FindObjectOfType<BubbleShooter>().isMerging = false;
                 onComplete?.Invoke(); //삭제는 여기서 호출되도록!
                 Destroy(gameObject);
             });

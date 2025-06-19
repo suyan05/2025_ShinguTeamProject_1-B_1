@@ -231,7 +231,7 @@ public class BubbleGrid : MonoBehaviour
             
             return true;
         }
-        FindObjectOfType<BubbleShooter>().isMerging = false;
+        
         return false;
     }
 
