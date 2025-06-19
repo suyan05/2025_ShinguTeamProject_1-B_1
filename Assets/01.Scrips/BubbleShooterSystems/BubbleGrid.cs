@@ -204,6 +204,7 @@ public class BubbleGrid : MonoBehaviour
                 }
                 else
                 {
+                    SoundManager.Instance.PlayMerge();
                     bubble.PlayMergeAnimation();
                     if (pos != baseCell)
                         pendingMergeRemovals.Add(pos);
