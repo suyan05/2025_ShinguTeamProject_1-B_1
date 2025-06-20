@@ -245,6 +245,7 @@ public class BubbleGrid : MonoBehaviour
 
         if (bubble.level >= 8)
         {
+            SoundManager.Instance.PlayExplosion();
             bubble.PlayExplosionAnimation();         // 중심 버블은 큰 폭발
             RemoveNearbyBubbles(baseCell);
             grid[baseCell.y, baseCell.x] = null;

@@ -58,12 +58,19 @@ public class SoundManager : MonoBehaviour
 
     public void PlayExplosion()
     {
+        Debug.Log("Explosion SFX 재생");
         PlayEffect(PlayExplosionSFX);
     }
 
     private void PlayEffect(AudioClip clip)
     {
-        if (clip == null) return;
+        if (clip == null)
+        {
+            Debug.LogWarning(" AudioClip이 null입니다. 사운드 미재생");
+            return;
+        }
+
         effectSource.PlayOneShot(clip);
     }
+
 }

@@ -534,7 +534,7 @@ AudioSource:
   m_GameObject: {fileID: 579866460}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 8030313515014911821, guid: baf4a70540b71264e8095727debd0a26, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -639,7 +639,7 @@ MonoBehaviour:
   attachSFX: {fileID: 8300000, guid: 19b34c545607e6e4d9d7a50ce45fb57e, type: 3}
   gameOverSFX: {fileID: 8300000, guid: 5fdb13d3756c84fecac96f5a2d124370, type: 3}
   buttonClickSFX: {fileID: 8300000, guid: d8d04c6f80a1140db85ede568dab1f51, type: 3}
-  PlayExplosionSFX: {fileID: 0}
+  PlayExplosionSFX: {fileID: 8300000, guid: 432dd15313a3cb9469e5670658009b59, type: 3}
 --- !u!4 &579866463
 Transform:
   m_ObjectHideFlags: 0
@@ -3596,6 +3596,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6570041037123702906, guid: 4d361c4c9afc440478e8e098f1b18762, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6570041037123702906, guid: 4d361c4c9afc440478e8e098f1b18762, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 8030313515014911821, guid: baf4a70540b71264e8095727debd0a26, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
