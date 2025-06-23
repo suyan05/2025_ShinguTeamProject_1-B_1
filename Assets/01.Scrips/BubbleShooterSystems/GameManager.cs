@@ -6,6 +6,19 @@ using static ScoreSaveSystem;
 
 public class GameManager : MonoBehaviour
 {
+    class User
+    {
+        public string name;
+        public string password;
+        public string address;
+        public void Reg(string code)
+        {
+            this.name = code;
+        }
+
+        string phoneNumber;
+    }
+    
     public Dictionary<int, int> levelScores = new Dictionary<int, int>
     {
         {1, 20}, {2, 40}, {3, 80}, {4, 140}, {5, 220}, {6, 330}, {7, 480}, {8, 1000}
@@ -109,6 +122,6 @@ public class GameManager : MonoBehaviour
         if (gravityManager != null)
         {
             gravityManager.TriggerGameOverSequence(); // 게임 오버 시 중력 정리 실행
-        }
+        }        
     }
 }
